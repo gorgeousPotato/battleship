@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="style/style.css" rel="stylesheet" type="text/css" />
+    <script defer src="script.js"></script>
+  </head>
+  <body>
+    <header>
+      <div id="logo">
+        <img src="images/logo.png" alt="logo" />
+        <h1>Battleship</h1>
+      </div>
+      <!-- <h2 id="turn" class="hidden">Your turn!</h2> -->
+      <h2 id="turn">Click 3 cells to place your submarine</h2>
+    </header>
+    <main>
+      <section id="sec-user" class="flex-center">
+        <div>
+          <h2>Your board</h2>
+          <div class="board board-user">
+            <div id="uc0r0"></div>
+            <div id="uc1r0"></div>
+            <div id="uc2r0"></div>
+            <div id="uc3r0"></div>
+            <div id="uc4r0"></div>
+            <div id="uc5r0"></div>
+            <div id="uc6r0"></div>
+            <div id="uc7r0"></div>
+            <div id="uc8r0"></div>
+            <div id="uc9r0"></div>
+
+            <div id="uc0r1"></div>
+            <div id="uc1r1"></div>
+            <div id="uc2r1"></div>
+            <div id="uc3r1"></div>
+            <div id="uc4r1"></div>
+            <div id="uc5r1"></div>
+            <div id="uc6r1"></div>
+            <div id="uc7r1"></div>
+            <div id="uc8r1"></div>
+            <div id="uc9r1"></div>
+
+            <div id="uc0r2"></div>
+            <div id="uc1r2"></div>
+            <div id="uc2r2"></div>
+            <div id="uc3r2"></div>
+            <div id="uc4r2"></div>
+            <div id="uc5r2"></div>
+            <div id="uc6r2"></div>
+            <div id="uc7r2"></div>
+            <div id="uc8r2"></div>
+            <div id="uc9r2"></div>
+
+            <div id="uc0r3"></div>
+            <div id="uc1r3"></div>
+            <div id="uc2r3"></div>
+            <div id="uc3r3"></div>
+            <div id="uc4r3"></div>
+            <div id="uc5r3"></div>
+            <div id="uc6r3"></div>
+            <div id="uc7r3"></div>
+            <div id="uc8r3"></div>
+            <div id="uc9r3"></div>
+
+            <div id="uc0r4"></div>
+            <div id="uc1r4"></div>
+            <div id="uc2r4"></div>
+            <div id="uc3r4"></div>
+            <div id="uc4r4"></div>
+            <div id="uc5r4"></div>
+            <div id="uc6r4"></div>
+            <div id="uc7r4"></div>
+            <div id="uc8r4"></div>
+            <div id="uc9r4"></div>
+
+            <div id="uc0r5"></div>
+            <div id="uc1r5"></div>
+            <div id="uc2r5"></div>
+            <div id="uc3r5"></div>
+            <div id="uc4r5"></div>
+            <div id="uc5r5"></div>
+            <div id="uc6r5"></div>
+            <div id="uc7r5"></div>
+            <div id="uc8r5"></div>
+            <div id="uc9r5"></div>
+
+            <div id="uc0r6"></div>
+            <div id="uc1r6"></div>
+            <div id="uc2r6"></div>
+            <div id="uc3r6"></div>
+            <div id="uc4r6"></div>
+            <div id="uc5r6"></div>
+            <div id="uc6r6"></div>
+            <div id="uc7r6"></div>
+            <div id="uc8r6"></div>
+            <div id="uc9r6"></div>
+
+            <div id="uc0r7"></div>
+            <div id="uc1r7"></div>
+            <div id="uc2r7"></div>
+            <div id="uc3r7"></div>
+            <div id="uc4r7"></div>
+            <div id="uc5r7"></div>
+            <div id="uc6r7"></div>
+            <div id="uc7r7"></div>
+            <div id="uc8r7"></div>
+            <div id="uc9r7"></div>
+
+            <div id="uc0r8"></div>
+            <div id="uc1r8"></div>
+            <div id="uc2r8"></div>
+            <div id="uc3r8"></div>
+            <div id="uc4r8"></div>
+            <div id="uc5r8"></div>
+            <div id="uc6r8"></div>
+            <div id="uc7r8"></div>
+            <div id="uc8r8"></div>
+            <div id="uc9r8"></div>
+
+            <div id="uc0r9"></div>
+            <div id="uc1r9"></div>
+            <div id="uc2r9"></div>
+            <div id="uc3r9"></div>
+            <div id="uc4r9"></div>
+            <div id="uc5r9"></div>
+            <div id="uc6r9"></div>
+            <div id="uc7r9"></div>
+            <div id="uc8r9"></div>
+            <div id="uc9r9"></div>
+          </div>
+        </div>
+      </section>
+      <section id="sec-comp" class="flex-center">
+        <div>
+          <h2>Computer's board</h2>
+          <div class="board board-comp">
+            <div id="cc0r0"></div>
+            <div id="cc1r0"></div>
+            <div id="cc2r0"></div>
+            <div id="cc3r0"></div>
+            <div id="cc4r0"></div>
+            <div id="cc5r0"></div>
+            <div id="cc6r0"></div>
+            <div id="cc7r0"></div>
+            <div id="cc8r0"></div>
+            <div id="cc9r0"></div>
+
+            <div id="cc0r1"></div>
+            <div id="cc1r1"></div>
+            <div id="cc2r1"></div>
+            <div id="cc3r1"></div>
+            <div id="cc4r1"></div>
+            <div id="cc5r1"></div>
+            <div id="cc6r1"></div>
+            <div id="cc7r1"></div>
+            <div id="cc8r1"></div>
+            <div id="cc9r1"></div>
+
+            <div id="cc0r2"></div>
+            <div id="cc1r2"></div>
+            <div id="cc2r2"></div>
+            <div id="cc3r2"></div>
+            <div id="cc4r2"></div>
+            <div id="cc5r2"></div>
+            <div id="cc6r2"></div>
+            <div id="cc7r2"></div>
+            <div id="cc8r2"></div>
+            <div id="cc9r2"></div>
+
+            <div id="cc0r3"></div>
+            <div id="cc1r3"></div>
+            <div id="cc2r3"></div>
+            <div id="cc3r3"></div>
+            <div id="cc4r3"></div>
+            <div id="cc5r3"></div>
+            <div id="cc6r3"></div>
+            <div id="cc7r3"></div>
+            <div id="cc8r3"></div>
+            <div id="cc9r3"></div>
+
+            <div id="cc0r4"></div>
+            <div id="cc1r4"></div>
+            <div id="cc2r4"></div>
+            <div id="cc3r4"></div>
+            <div id="cc4r4"></div>
+            <div id="cc5r4"></div>
+            <div id="cc6r4"></div>
+            <div id="cc7r4"></div>
+            <div id="cc8r4"></div>
+            <div id="cc9r4"></div>
+
+            <div id="cc0r5"></div>
+            <div id="cc1r5"></div>
+            <div id="cc2r5"></div>
+            <div id="cc3r5"></div>
+            <div id="cc4r5"></div>
+            <div id="cc5r5"></div>
+            <div id="cc6r5"></div>
+            <div id="cc7r5"></div>
+            <div id="cc8r5"></div>
+            <div id="cc9r5"></div>
+
+            <div id="cc0r6"></div>
+            <div id="cc1r6"></div>
+            <div id="cc2r6"></div>
+            <div id="cc3r6"></div>
+            <div id="cc4r6"></div>
+            <div id="cc5r6"></div>
+            <div id="cc6r6"></div>
+            <div id="cc7r6"></div>
+            <div id="cc8r6"></div>
+            <div id="cc9r6"></div>
+
+            <div id="cc0r7"></div>
+            <div id="cc1r7"></div>
+            <div id="cc2r7"></div>
+            <div id="cc3r7"></div>
+            <div id="cc4r7"></div>
+            <div id="cc5r7"></div>
+            <div id="cc6r7"></div>
+            <div id="cc7r7"></div>
+            <div id="cc8r7"></div>
+            <div id="cc9r7"></div>
+
+            <div id="cc0r8"></div>
+            <div id="cc1r8"></div>
+            <div id="cc2r8"></div>
+            <div id="cc3r8"></div>
+            <div id="cc4r8"></div>
+            <div id="cc5r8"></div>
+            <div id="cc6r8"></div>
+            <div id="cc7r8"></div>
+            <div id="cc8r8"></div>
+            <div id="cc9r8"></div>
+
+            <div id="cc0r9"></div>
+            <div id="cc1r9"></div>
+            <div id="cc2r9"></div>
+            <div id="cc3r9"></div>
+            <div id="cc4r9"></div>
+            <div id="cc5r9"></div>
+            <div id="cc6r9"></div>
+            <div id="cc7r9"></div>
+            <div id="cc8r9"></div>
+            <div id="cc9r9"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <h1 id="score">Score : Score</h1>
+      <button class="hidden">Start Again</button>
+    </footer>
+  </body>
+</html>
