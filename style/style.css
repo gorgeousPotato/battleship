@@ -47,32 +47,20 @@ header h2 {
   justify-content: left;
 }
 
-/* header button {
-  height: 3rem;
-  width: 10rem;
-  border-radius: 100px;
-  border: none;
+#ships-to-drag {
   background-color: #00b7a8;
-  margin: 0 1rem 2rem;
-}
-
-header button:hover {
-  background-color: #0c084c;
-}
-
-button img {
-  height: 1.5rem;
-} */
-
-#ships-to-drag div {
-  background-color: #00b7a8;
-  border-radius: 100px;
-  padding: 1rem 2rem 0.8rem 2rem;
-  margin-right: 2rem;
+  border-radius: 2rem;
+  height: 50vmin;
+  width: 50vmin;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 #ships-to-drag img {
   height: 2rem;
+  margin: 1rem;
 }
 
 .over {

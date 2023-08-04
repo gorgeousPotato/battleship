@@ -42,6 +42,7 @@ let turn; // 1 for user, -1 for computer
 let winner;
 let score;
 let currShip; //represents which ship is being placed, maybe will delete this
+let shipLength; //represents the length of a ship being placed currently
 
 /*----- cached elements  -----*/
 const messageEl = document.getElementById("turn");
@@ -49,7 +50,7 @@ const scoreEl = document.getElementById("score");
 const boardsEl = document.getElementById("boards"); //maybe delete either this or the next 2 lines, will decide later
 const boardUserEl = document.querySelector(".board-user");
 const boardCompEl = document.querySelector(".comp-user");
-const shipEls = document.querySelectorAll("#ships-to-drag div");
+const shipEls = document.querySelectorAll("#ships-to-drag img");
 
 /*----- event listeners -----*/
 shipEls.forEach((ship) => {
@@ -145,12 +146,28 @@ function renderScore() {
 }
 
 function handleUserPlacementClick(cell) {
+  //changes one cell in the model
   if (game) return;
   const cellId = cell;
   const cellIdx = getIdx(cellId);
   const rowArr = boardUser[cellIdx[1]];
   const colIdx = cellIdx[0];
   rowArr[colIdx] = "s";
+  render();
+}
+
+function handleShipPlacement(cellId, length) {
+  //changes other cells in the model
+  const cellIdx = getIdx(cellId);
+  const rowArr = boardUser[cellIdx[1]];
+  const colIdx = cellIdx[0];
+  for (let i = 1; i < length; i++) {
+    if (colIdx + i > 9) {
+      rowArr[colIdx - i] = "s";
+    } else {
+      rowArr[colIdx + i] = "s";
+    }
+  }
   render();
 }
 
@@ -164,7 +181,9 @@ const getIdx = function (id) {
 //functions for dragging and dropping
 
 function handleDragStart(evt) {
+  console.log(evt);
   evt.target.style.opacity = "0.4";
+  shipLength = evt.target.id;
 }
 
 function handleDragEnd(evt) {
@@ -180,5 +199,8 @@ function handleDrop(evt) {
   evt.stopPropagation();
   console.log(evt);
   handleUserPlacementClick(evt.target.id);
+  handleShipPlacement(evt.target.id, shipLength);
   return false;
 }
+
+//
