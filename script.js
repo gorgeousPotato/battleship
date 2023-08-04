@@ -6,7 +6,7 @@ const TURN = {
 
 const CONDITION = {
   0: "", //empty
-  s: "⚓️", //ship
+  s: "⚪️", //ship
   i: "💣", //injured
   k: "🔥", //killed
   m: "✖️", //miss
@@ -36,41 +36,49 @@ const SHIP = {
 };
 
 /*----- state variables -----*/
-let boardUser, boardComp, game, turn, winner, score;
+let boardUser, boardComp;
+let game; //is true when the user and the computer make guesses, is wrong when they are placing ships
+let turn; // 1 for user, -1 for computer
+let winner;
+let score;
+let currShip; //represents which ship is being placed, maybe will delete this
 
 /*----- cached elements  -----*/
 const messageEl = document.getElementById("turn");
 const scoreEl = document.getElementById("score");
+const boardsEl = document.getElementById("boards"); //maybe delete either this or the next 2 lines, will decide later
+const boardUserEl = document.querySelector(".board-user");
+const boardCompEl = document.querySelector(".comp-user");
 
 /*----- event listeners -----*/
-
+// boardUserEl.addEventListener("click", handleUserPlacement);
 /*----- functions -----*/
 init();
 
 function init() {
   boardUser = [
-    [0, "k", 0, 0, 0, 0, "m", 0, 0, 0],
-    [0, "k", 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, "k", 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, "s", 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, "s", 0, 0, 0, "m", 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, "i", 0, 0, 0],
-    [0, 0, "m", 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
 
   boardComp = [
-    [0, "k", 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, "i", 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, "m", 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
 
@@ -78,8 +86,10 @@ function init() {
     u: 0,
     c: 0,
   };
+
   turn = 1;
   winner = null;
+  currShip = "cr";
   game = false;
   render();
 }
@@ -117,10 +127,42 @@ function renderMessage() {
     messageEl.innerHTML = `${turn === 1 ? "Your" : "Computer's"} turn`;
     //if game hasn't begun, the instruction on how to place ships is rendered
   } else {
-    messageEl.innerHTML = `Click ${SHIP["cr"].cells} cells to place your ${SHIP["cr"].name}`;
+    messageEl.innerHTML = `Click a ship to place it ⬇️`;
   }
 }
 
 function renderScore() {
   scoreEl.innerHTML = `${score["u"]}   :   ${score["c"]}`;
 }
+
+function handleUserPlacement(evt) {
+  if (game) return;
+  console.log("hi");
+  const cellId = evt.target.id;
+  const cellIdx = getIdx(cellId);
+  const rowArr = boardUser[cellIdx[1]];
+  const colIdx = cellIdx[0];
+  rowArr[colIdx] = "s";
+  render();
+}
+
+//helper function
+
+const getIdx = function (id) {
+  const idxArr = id.split("");
+  return [parseInt(idxArr[2]), parseInt(idxArr[4])];
+};
+
+function gameProcess() {
+  for (const property in SHIP) {
+    currShip = property;
+    for (let n = 0; n < SHIP[property].quantity; n++) {
+      for (let i = 0; i < SHIP[property].cells; i++) {
+        console.log(i);
+        boardUserEl.addEventListener("click", handleUserPlacement);
+      }
+    }
+  }
+}
+
+gameProcess();
