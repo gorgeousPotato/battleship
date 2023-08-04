@@ -24,9 +24,9 @@
     </header>
     <main>
       <section id="sec-user" class="flex-center">
-        <div id="boards">
+        <div id="board-user-container">
           <h2>Your board</h2>
-          <div class="board board-user">
+          <div id="board-user" class="board board-user">
             <div id="uc0r0"></div>
             <div id="uc1r0"></div>
             <div id="uc2r0"></div>
@@ -140,7 +140,7 @@
         </div>
       </section>
       <section id="sec-comp" class="flex-center">
-        <div class="hidden">
+        <div id="board-comp-container" class="hidden">
           <h2>Computer's board</h2>
           <div class="board board-comp">
             <div id="cc0r0"></div>
@@ -254,23 +254,26 @@
             <div id="cc9r9"></div>
           </div>
         </div>
-        <div id="ships-to-drag">
-          <img draggable="true" id="5" src="images/Frame 1.png" />
-          <img draggable="true" id="4" src="images/Frame 2.png" />
-          <img draggable="true" id="4" src="images/Frame 2.png" />
-          <img draggable="true" id="3" src="images/Frame 3.png" />
-          <img draggable="true" id="3" src="images/Frame 3.png" />
-          <img draggable="true" id="3" src="images/Frame 3.png" />
-          <img draggable="true" id="2" src="images/Frame 4.png" />
-          <img draggable="true" id="2" src="images/Frame 4.png" />
-          <img draggable="true" id="2" src="images/Frame 4.png" />
-          <img draggable="true" id="2" src="images/Frame 4.png" />
+        <div id="ships-to-drag-container">
+          <div id="ships-to-drag">
+            <img draggable="true" class="5" src="images/Frame 1.png" />
+            <img draggable="true" class="4" src="images/Frame 2.png" />
+            <img draggable="true" class="4" src="images/Frame 2.png" />
+            <img draggable="true" class="3" src="images/Frame 3.png" />
+            <img draggable="true" class="3" src="images/Frame 3.png" />
+            <img draggable="true" class="3" src="images/Frame 3.png" />
+            <img draggable="true" class="2" src="images/Frame 4.png" />
+            <img draggable="true" class="2" src="images/Frame 4.png" />
+            <img draggable="true" class="2" src="images/Frame 4.png" />
+            <img draggable="true" class="2" src="images/Frame 4.png" />
+          </div>
         </div>
       </section>
     </main>
-    <footer>
-      <h1 id="score">Score : Score</h1>
+    <footer class="flex-center">
+      <h1 id="score" class="hidden">Score : Score</h1>
       <button class="hidden">Start Again</button>
+      <button class="start-game">Start Game</button>
     </footer>
   </body>
 </html>

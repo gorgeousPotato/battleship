@@ -43,14 +43,16 @@ let winner;
 let score;
 let currShip; //represents which ship is being placed, maybe will delete this
 let shipLength; //represents the length of a ship being placed currently
+let dragged; //to store info about a ship currently being dragged
 
 /*----- cached elements  -----*/
 const messageEl = document.getElementById("turn");
 const scoreEl = document.getElementById("score");
-const boardsEl = document.getElementById("boards"); //maybe delete either this or the next 2 lines, will decide later
+const boardsEl = document.getElementById("board-user-container"); //maybe delete either this or the next 2 lines, will decide later
 const boardUserEl = document.querySelector(".board-user");
-const boardCompEl = document.querySelector(".comp-user");
+const boardCompEl = document.querySelector(".board-comp");
 const shipEls = document.querySelectorAll("#ships-to-drag img");
+const startGameBtn = document.querySelector(".start-game");
 
 /*----- event listeners -----*/
 shipEls.forEach((ship) => {
@@ -61,6 +63,7 @@ shipEls.forEach((ship) => {
   addEventListener("dragend", handleDragEnd);
   addEventListener("drop", handleDrop);
 });
+startGameBtn.addEventListener("click", handleGameStart);
 
 /*----- functions -----*/
 init();
@@ -161,9 +164,10 @@ function handleShipPlacement(cellId, length) {
   const cellIdx = getIdx(cellId);
   const rowArr = boardUser[cellIdx[1]];
   const colIdx = cellIdx[0];
+  const currIdx = colIdx;
   for (let i = 1; i < length; i++) {
-    if (colIdx + i > 9) {
-      rowArr[colIdx - i] = "s";
+    if (currIdx + i > 9) {
+      rowArr[colIdx - 1] = "s";
     } else {
       rowArr[colIdx + i] = "s";
     }
@@ -178,16 +182,27 @@ const getIdx = function (id) {
   return [parseInt(idxArr[2]), parseInt(idxArr[4])];
 };
 
+//helper function to check how many ships are on a board
+function checkShips(board) {
+  let count = 0;
+  board.forEach((row) => {
+    count += row.filter((c) => c === "s").length;
+  });
+  return count;
+}
+
 //functions for dragging and dropping
 
 function handleDragStart(evt) {
   console.log(evt);
+  dragged = evt.target;
   evt.target.style.opacity = "0.4";
-  shipLength = evt.target.id;
+  shipLength = evt.target.className;
 }
 
 function handleDragEnd(evt) {
-  evt.target.style.opacity = "0"; //will correct this later
+  evt.target.style.opacity = ""; //will correct this later
+  dragged = null;
 }
 
 function handleDragOver(evt) {
@@ -197,10 +212,20 @@ function handleDragOver(evt) {
 
 function handleDrop(evt) {
   evt.stopPropagation();
-  console.log(evt);
-  handleUserPlacementClick(evt.target.id);
-  handleShipPlacement(evt.target.id, shipLength);
-  return false;
+  if (evt.target.parentElement.id === "board-user") {
+    dragged.parentNode.removeChild(dragged);
+    dragged.opacity = "";
+    handleUserPlacementClick(evt.target.id);
+    handleShipPlacement(evt.target.id, shipLength);
+    if (checkShips(boardUser) === 30) startGameBtn.classList.remove("hidden");
+    // return false;
+  }
 }
 
-//
+//starting game
+
+function handleGameStart() {
+  let game = true;
+  document.getElementById("ships-to-drag-container").classList.add("hidden");
+  document.getElementById("board-comp-container").classList.remove("hidden");
+}
