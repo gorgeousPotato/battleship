@@ -47,7 +47,7 @@ header h2 {
   justify-content: left;
 }
 
-header button {
+/* header button {
   height: 3rem;
   width: 10rem;
   border-radius: 100px;
@@ -62,6 +62,21 @@ header button:hover {
 
 button img {
   height: 1.5rem;
+} */
+
+#ships-to-drag div {
+  background-color: #00b7a8;
+  border-radius: 100px;
+  padding: 1rem 2rem 0.8rem 2rem;
+  margin-right: 2rem;
+}
+
+#ships-to-drag img {
+  height: 2rem;
+}
+
+.over {
+  border: 3px solid rgb(95, 147, 143) 8;
 }
 
 /* board elements  */

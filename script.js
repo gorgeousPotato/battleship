@@ -49,9 +49,18 @@ const scoreEl = document.getElementById("score");
 const boardsEl = document.getElementById("boards"); //maybe delete either this or the next 2 lines, will decide later
 const boardUserEl = document.querySelector(".board-user");
 const boardCompEl = document.querySelector(".comp-user");
+const shipEls = document.querySelectorAll("#ships-to-drag div");
 
 /*----- event listeners -----*/
-// boardUserEl.addEventListener("click", handleUserPlacement);
+shipEls.forEach((ship) => {
+  addEventListener("dragstart", handleDragStart);
+  addEventListener("dragover", handleDragOver);
+  // addEventListener("dragenter", handleDragEnter);
+  // addEventListener("dragleave", handleDragLeave);
+  addEventListener("dragend", handleDragEnd);
+  addEventListener("drop", handleDrop);
+});
+
 /*----- functions -----*/
 init();
 
@@ -135,10 +144,9 @@ function renderScore() {
   scoreEl.innerHTML = `${score["u"]}   :   ${score["c"]}`;
 }
 
-function handleUserPlacement(evt) {
+function handleUserPlacementClick(cell) {
   if (game) return;
-  console.log("hi");
-  const cellId = evt.target.id;
+  const cellId = cell;
   const cellIdx = getIdx(cellId);
   const rowArr = boardUser[cellIdx[1]];
   const colIdx = cellIdx[0];
@@ -153,16 +161,24 @@ const getIdx = function (id) {
   return [parseInt(idxArr[2]), parseInt(idxArr[4])];
 };
 
-function gameProcess() {
-  for (const property in SHIP) {
-    currShip = property;
-    for (let n = 0; n < SHIP[property].quantity; n++) {
-      for (let i = 0; i < SHIP[property].cells; i++) {
-        console.log(i);
-        boardUserEl.addEventListener("click", handleUserPlacement);
-      }
-    }
-  }
+//functions for dragging and dropping
+
+function handleDragStart(evt) {
+  evt.target.style.opacity = "0.4";
 }
 
-gameProcess();
+function handleDragEnd(evt) {
+  evt.target.style.opacity = "0"; //will correct this later
+}
+
+function handleDragOver(evt) {
+  evt.preventDefault();
+  return false;
+}
+
+function handleDrop(evt) {
+  evt.stopPropagation();
+  console.log(evt);
+  handleUserPlacementClick(evt.target.id);
+  return false;
+}
