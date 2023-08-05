@@ -142,6 +142,7 @@ function renderMessage() {
     //if game hasn't begun, the instruction on how to place ships is rendered
   } else {
     messageEl.innerHTML = `Click a ship to place it ⬇️`;
+    messageEl.style.textAlign = "right";
   }
 }
 
@@ -230,6 +231,10 @@ function handleGameStart() {
   computerShipPlacement();
   document.getElementById("ships-to-drag-container").classList.add("hidden");
   document.getElementById("board-comp-container").classList.remove("hidden");
+  startGameBtn.classList.add("hidden");
+  scoreEl.classList.remove("hidden");
+  messageEl.innerHTML = "Your turn!";
+  messageEl.style.textAlign = "center";
 }
 
 //helper function placing a ship to a random cell
@@ -254,10 +259,9 @@ function randomDirection() {
 function randomShipPlacement(length) {
   randomCellIdx();
   const randomCell = randomCellIdx();
-  let rowArr = boardComp[randomCell[1]];
+  // let rowArr = boardComp[randomCell[1]];
   let rowIdx = randomCell[1];
   let colIdx = randomCell[0];
-  console.log(rowIdx, colIdx);
   if (
     boardComp[rowIdx][colIdx] !== 0 ||
     rowIdx + 1 > 9 ||
@@ -280,7 +284,7 @@ function randomShipPlacement(length) {
         boardComp[rowIdx][colIdx + 1] !== 0 ||
         boardComp[rowIdx][colIdx - 1] !== 0 ||
         rowIdx + 1 > 9 ||
-        boardComp[rowIdx + 1][colIdx + 1] !== 0
+        boardComp[rowIdx + 1][colIdx] !== 0
       )
         return false;
       currCells.push([colIdx, rowIdx]);
@@ -306,31 +310,26 @@ function randomShipPlacement(length) {
     row[col] = "sc";
   });
   render();
+  return true;
+}
+
+//helper function to handle a random placement of a ship until it's actually placed
+function doUntilPlaced(length) {
+  let ship;
+  do {
+    ship = randomShipPlacement(length);
+  } while (ship !== true);
 }
 
 function computerShipPlacement() {
-  let ship;
-  for (i = 0; i < 2; i++) {
-    do {
-      ship = randomShipPlacement(5);
-    } while (ship === true);
-  }
-
-  for (i = 0; i < 3; i++) {
-    do {
-      ship = randomShipPlacement(4);
-    } while (ship !== false);
-  }
-
-  for (i = 0; i < 4; i++) {
-    do {
-      ship = randomShipPlacement(3);
-    } while (ship !== false);
-  }
-
-  for (i = 0; i < 5; i++) {
-    do {
-      ship = randomShipPlacement(2);
-    } while (ship !== false);
-  }
+  doUntilPlaced(5);
+  doUntilPlaced(4);
+  doUntilPlaced(3);
+  doUntilPlaced(3);
+  doUntilPlaced(2);
+  doUntilPlaced(2);
+  doUntilPlaced(2);
+  doUntilPlaced(1);
+  doUntilPlaced(1);
+  doUntilPlaced(1);
 }
