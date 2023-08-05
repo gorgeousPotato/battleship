@@ -6,13 +6,14 @@ const TURN = {
 
 const CONDITION = {
   0: "", //empty
-  s: "⚪️", //ship
+  s: "⚪️", //user's ship
+  sc: "▫️", //computer's ship
   i: "💣", //injured
   k: "🔥", //killed
   m: "✖️", //miss
 };
 
-const SHIP = {
+const SHIPS = {
   cr: {
     name: "carrier",
     cells: 5,
@@ -226,6 +227,85 @@ function handleDrop(evt) {
 
 function handleGameStart() {
   let game = true;
+  // computerShipPlacement();
   document.getElementById("ships-to-drag-container").classList.add("hidden");
   document.getElementById("board-comp-container").classList.remove("hidden");
+}
+
+//helper function placing a ship to a random cell
+function randomCellIdx() {
+  const randomCellIdx = [
+    Math.floor(Math.random() * 10),
+    Math.floor(Math.random() * 10),
+  ];
+  return randomCellIdx;
+}
+
+//helper function ramdomly choosing direction
+function randomDirection() {
+  const directions = ["v", "h"]; //v for vertical,h for horizontal
+  const randomNum = Math.floor(Math.random() * 2);
+  console.log(randomNum);
+  return directions[randomNum];
+}
+
+// function computerShipPlacement() {
+//   for (const ship in SHIPS) {
+//     for (let i = 0; i < SHIPS[ship].quantity; i++) {
+//       const randomCell = randomCellIdx();
+//       let rowArr = boardComp[randomCell[1]];
+//       let colIdx = randomCell[0];
+//       rowArr[colIdx] = "sc";
+
+//       let randomDir = randomDirection();
+//       for (let n = 0; n < SHIPS[ship].cells; n++) {
+//         if (randomDir === "n") {
+//           rowArr = rowArr - i;
+//           rowArr[colIdx] = "sc";
+//         }
+//         if (randomDir === "e") {
+//           colIdx = colIdx + i;
+//           rowArr[colIdx] = "sc";
+//         }
+//         if (randomDir === "s") {
+//           rowArr = rowArr + i;
+//           rowArr[colIdx] = "sc";
+//         }
+//         if (randomDir === "w") {
+//           colIdx = colIdx + i;
+//           rowArr[colIdx] = "sc";
+//         }
+//       }
+//     }
+//   }
+// }
+
+function randomShipPlacement(length) {
+  randomCellIdx();
+  const randomCell = randomCellIdx();
+  let rowArr = boardComp[randomCell[1]];
+  let rowIdx = randomCell[1];
+  let colIdx = randomCell[0];
+  if (rowArr[colIdx] === 0) {
+    let currCells = [randomCell];
+    const randomDir = randomDirection();
+    for (let i = 1; i < length; i++) {
+      if (randomDir === "v") {
+        rowIdx = rowIdx + 1;
+        if (rowIdx + 1 > 9 || rowArr[colIdx] !== 0) return;
+        currCells.push([colIdx, rowIdx]);
+      }
+      if (randomDir === "h") {
+        colIdx = colIdx + 1;
+        if (colIdx > 9 || rowArr[colIdx] !== 0) return;
+        currCells.push([colIdx, rowIdx]);
+      }
+    }
+    currCells.forEach((cell) => {
+      let row = boardComp[cell[1]];
+      let col = cell[0];
+      row[col] = "sc";
+    });
+    render();
+  }
 }
