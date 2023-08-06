@@ -250,11 +250,62 @@ function randomCellIdx() {
 function randomDirection() {
   const directions = ["v", "h"]; //v for vertical,h for horizontal
   const randomNum = Math.floor(Math.random() * 2);
-  console.log(randomNum);
   return directions[randomNum];
 }
 
 //helper function to handle random placement of a ship
+
+// function randomShipPlacement(length) {
+//   randomCellIdx();
+//   const randomCell = randomCellIdx();
+//   // let rowArr = boardComp[randomCell[1]];
+//   let rowIdx = randomCell[1];
+//   let colIdx = randomCell[0];
+//   console.log(randomCell);
+//   console.log(boardComp[rowIdx - 1][colIdx]);
+//   if (
+//     boardComp[rowIdx][colIdx] !== 0 ||
+//     boardComp[rowIdx + 1][colIdx] !== 0 ||
+//     boardComp[rowIdx - 1][colIdx] !== 0 ||
+//     boardComp[rowIdx][colIdx + 1] !== 0 ||
+//     boardComp[rowIdx][colIdx - 1] !== 0
+//   )
+//     return false;
+
+//   let currCells = [randomCell];
+//   const randomDir = randomDirection();
+//   for (let i = 1; i < length; i++) {
+//     if (randomDir === "v") {
+//       rowIdx = rowIdx + 1;
+//       if (
+//         boardComp[rowIdx][colIdx] !== 0 ||
+//         boardComp[rowIdx][colIdx + 1] !== 0 ||
+//         boardComp[rowIdx][colIdx - 1] !== 0 ||
+//         boardComp[rowIdx + 1][colIdx] !== 0
+//       )
+//         return false;
+//       currCells.push([colIdx, rowIdx]);
+//     }
+//     if (randomDir === "h") {
+//       colIdx = colIdx + 1;
+//       if (
+//         boardComp[rowIdx][colIdx] !== 0 ||
+//         boardComp[rowIdx + 1][colIdx] !== 0 ||
+//         boardComp[rowIdx - 1][colIdx] !== 0 ||
+//         boardComp[rowIdx][colIdx + 1] !== 0
+//       )
+//         return false;
+//       currCells.push([colIdx, rowIdx]);
+//     }
+//   }
+//   currCells.forEach((cell) => {
+//     let row = boardComp[cell[1]];
+//     let col = cell[0];
+//     row[col] = "sc";
+//   });
+//   render();
+//   return true;
+// }
 
 function randomShipPlacement(length) {
   randomCellIdx();
@@ -263,54 +314,50 @@ function randomShipPlacement(length) {
   let rowIdx = randomCell[1];
   let colIdx = randomCell[0];
   if (
-    boardComp[rowIdx][colIdx] !== 0 ||
-    rowIdx + 1 > 9 ||
-    rowIdx - 1 < 0 ||
-    boardComp[rowIdx + 1][colIdx] !== 0 ||
-    boardComp[rowIdx - 1][colIdx] !== 0 ||
-    boardComp[rowIdx][colIdx + 1] !== 0 ||
-    boardComp[rowIdx][colIdx - 1] !== 0
-  )
-    return false;
-
-  let currCells = [randomCell];
-  const randomDir = randomDirection();
-  for (let i = 1; i < length; i++) {
-    if (randomDir === "v") {
-      rowIdx = rowIdx + 1;
-      if (
-        rowIdx + 1 > 9 ||
-        boardComp[rowIdx][colIdx] !== 0 ||
-        boardComp[rowIdx][colIdx + 1] !== 0 ||
-        boardComp[rowIdx][colIdx - 1] !== 0 ||
-        rowIdx + 1 > 9 ||
-        boardComp[rowIdx + 1][colIdx] !== 0
-      )
-        return false;
-      currCells.push([colIdx, rowIdx]);
+    boardComp[rowIdx][colIdx] === 0 &&
+    (rowIdx === 0 || boardComp[rowIdx - 1][colIdx] === 0) &&
+    (rowIdx === 9 || boardComp[rowIdx + 1][colIdx] === 0) &&
+    (colIdx === 0 || boardComp[rowIdx][colIdx - 1] === 0) &&
+    (colIdx === 9 || boardComp[rowIdx][colIdx + 1] === 0)
+  ) {
+    let currCells = [randomCell];
+    const randomDir = randomDirection();
+    for (let i = 1; i < length; i++) {
+      if (randomDir === "v") {
+        rowIdx = rowIdx + 1;
+        if (
+          rowIdx >= 0 &&
+          rowIdx <= 9 &&
+          boardComp[rowIdx][colIdx] === 0 &&
+          (rowIdx === 9 || boardComp[rowIdx + 1][colIdx] === 0) &&
+          (colIdx === 0 || boardComp[rowIdx][colIdx - 1] === 0) &&
+          (colIdx === 9 || boardComp[rowIdx][colIdx + 1] === 0)
+        ) {
+          currCells.push([colIdx, rowIdx]);
+        } else return false;
+      }
+      if (randomDir === "h") {
+        colIdx = colIdx + 1;
+        if (
+          colIdx >= 0 &&
+          colIdx <= 9 &&
+          boardComp[rowIdx][colIdx] === 0 &&
+          (rowIdx === 0 || boardComp[rowIdx - 1][colIdx] === 0) &&
+          (rowIdx === 9 || boardComp[rowIdx + 1][colIdx] === 0) &&
+          (colIdx === 9 || boardComp[rowIdx][colIdx + 1] === 0)
+        ) {
+          currCells.push([colIdx, rowIdx]);
+        } else return false;
+      }
     }
-    if (randomDir === "h") {
-      colIdx = colIdx + 1;
-      if (
-        rowIdx + 1 > 9 ||
-        boardComp[rowIdx][colIdx] !== 0 ||
-        rowIdx + 1 > 9 ||
-        rowIdx - 1 < 0 ||
-        boardComp[rowIdx + 1][colIdx] !== 0 ||
-        boardComp[rowIdx - 1][colIdx] !== 0 ||
-        boardComp[rowIdx][colIdx + 1] !== 0
-      )
-        return false;
-      currCells.push([colIdx, rowIdx]);
-    }
-  }
-  currCells.forEach((cell) => {
-    let row = boardComp[cell[1]];
-    let col = cell[0];
-    row[col] = "sc";
-  });
-  render();
-  return true;
+    currCells.forEach((cell) => {
+      let row = boardComp[cell[1]];
+      let col = cell[0];
+      row[col] = "sc";
+    });
+    render();
+    return true;
+  } else return false;
 }
 
 //helper function to handle a random placement of a ship until it's actually placed
