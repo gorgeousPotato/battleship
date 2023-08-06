@@ -33,6 +33,7 @@ header img {
 header h1 {
   display: inline-block;
   margin: 0;
+  margin-left: 0.4rem;
   font-size: 2rem;
 }
 
@@ -50,17 +51,18 @@ header h2 {
 
 #ships-to-drag {
   background-color: #00b7a8;
-  border-radius: 2rem;
-  height: 50vmin;
-  width: 50vmin;
+  height: 54.5vmin;
+  width: 54.5vmin;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
+  padding-top: 4rem;
+  margin-top: 2rem;
 }
 
 #ships-to-drag img {
-  height: 2rem;
+  height: 2.2rem;
   margin: 1rem;
 }
 

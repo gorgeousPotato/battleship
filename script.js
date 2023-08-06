@@ -190,7 +190,7 @@ function handleShipPlacement(cellId, length) {
           (colIdx === 9 || boardUser[rowIdx][colIdx + 1] === 0)
         ) {
           currCells.push([colIdx, rowIdx]);
-        } else return false;
+        } else return (shipIsPlaced = false);
       } else {
         colIdx = colIdx + 1;
         if (
@@ -202,7 +202,7 @@ function handleShipPlacement(cellId, length) {
           (colIdx === 9 || boardUser[rowIdx][colIdx + 1] === 0)
         ) {
           currCells.push([colIdx, rowIdx]);
-        } else return false;
+        } else return (shipIsPlaced = false);
       }
     }
     currCells.forEach((cell) => {
@@ -212,7 +212,7 @@ function handleShipPlacement(cellId, length) {
     });
     shipIsPlaced = true;
     render();
-  } else return false;
+  } else shipIsPlaced = false;
 }
 
 //helper function
@@ -234,13 +234,18 @@ function checkShips(board) {
 //functions for dragging and dropping
 
 function handleDragStart(evt) {
-  console.log(evt);
   dragged = evt.target;
   evt.target.style.opacity = "0.4";
+
   const classListArr = [...evt.target.classList];
   shipLength = classListArr[0];
   if (classListArr.includes("rotated")) shipIsRotated = true;
   else shipIsRotated = false;
+  if (shipIsRotated === true) {
+    const img = new Image();
+    img.src = `images/rotated/rotated-${shipLength}.png`;
+    evt.dataTransfer.setDragImage(img, 10, 10);
+  }
 }
 
 function handleDragEnd(evt) {
@@ -304,58 +309,6 @@ function randomDirection() {
 }
 
 //helper function to handle random placement of a ship
-
-// function randomShipPlacement(length) {
-//   randomCellIdx();
-//   const randomCell = randomCellIdx();
-//   // let rowArr = boardComp[randomCell[1]];
-//   let rowIdx = randomCell[1];
-//   let colIdx = randomCell[0];
-//   console.log(randomCell);
-//   console.log(boardComp[rowIdx - 1][colIdx]);
-//   if (
-//     boardComp[rowIdx][colIdx] !== 0 ||
-//     boardComp[rowIdx + 1][colIdx] !== 0 ||
-//     boardComp[rowIdx - 1][colIdx] !== 0 ||
-//     boardComp[rowIdx][colIdx + 1] !== 0 ||
-//     boardComp[rowIdx][colIdx - 1] !== 0
-//   )
-//     return false;
-
-//   let currCells = [randomCell];
-//   const randomDir = randomDirection();
-//   for (let i = 1; i < length; i++) {
-//     if (randomDir === "v") {
-//       rowIdx = rowIdx + 1;
-//       if (
-//         boardComp[rowIdx][colIdx] !== 0 ||
-//         boardComp[rowIdx][colIdx + 1] !== 0 ||
-//         boardComp[rowIdx][colIdx - 1] !== 0 ||
-//         boardComp[rowIdx + 1][colIdx] !== 0
-//       )
-//         return false;
-//       currCells.push([colIdx, rowIdx]);
-//     }
-//     if (randomDir === "h") {
-//       colIdx = colIdx + 1;
-//       if (
-//         boardComp[rowIdx][colIdx] !== 0 ||
-//         boardComp[rowIdx + 1][colIdx] !== 0 ||
-//         boardComp[rowIdx - 1][colIdx] !== 0 ||
-//         boardComp[rowIdx][colIdx + 1] !== 0
-//       )
-//         return false;
-//       currCells.push([colIdx, rowIdx]);
-//     }
-//   }
-//   currCells.forEach((cell) => {
-//     let row = boardComp[cell[1]];
-//     let col = cell[0];
-//     row[col] = "sc";
-//   });
-//   render();
-//   return true;
-// }
 
 function randomShipPlacement(length) {
   randomCellIdx();
@@ -421,12 +374,15 @@ function doUntilPlaced(length) {
 function computerShipPlacement() {
   doUntilPlaced(5);
   doUntilPlaced(4);
+  doUntilPlaced(4);
   doUntilPlaced(3);
   doUntilPlaced(3);
+  doUntilPlaced(3);
   doUntilPlaced(2);
   doUntilPlaced(2);
   doUntilPlaced(2);
-  doUntilPlaced(1);
-  doUntilPlaced(1);
-  doUntilPlaced(1);
+  doUntilPlaced(2);
+  // doUntilPlaced(1);
+  // doUntilPlaced(1);
+  // doUntilPlaced(1);
 }
