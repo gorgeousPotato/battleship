@@ -105,6 +105,10 @@ section h2 {
   align-items: center;
 }
 
+.rotated {
+  transform: rotate(90deg);
+}
+
 /* footer elements */
 
 #score {

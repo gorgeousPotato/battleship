@@ -44,6 +44,8 @@ let winner;
 let score;
 let currShip; //represents which ship is being placed, maybe will delete this
 let shipLength; //represents the length of a ship being placed currently
+let shipIsRotated; //represents if a user's ship is rotated
+let shipIsPlaced;
 let dragged; //to store info about a ship currently being dragged
 
 /*----- cached elements  -----*/
@@ -64,6 +66,10 @@ shipEls.forEach((ship) => {
   addEventListener("dragend", handleDragEnd);
   addEventListener("drop", handleDrop);
 });
+shipEls.forEach((ship) => {
+  addEventListener("click", handleRotate);
+});
+
 startGameBtn.addEventListener("click", handleGameStart);
 
 /*----- functions -----*/
@@ -150,31 +156,63 @@ function renderScore() {
   scoreEl.innerHTML = `${score["u"]}   :   ${score["c"]}`;
 }
 
-function handleUserPlacementClick(cell) {
-  //changes one cell in the model
-  if (game) return;
-  const cellId = cell;
-  const cellIdx = getIdx(cellId);
-  const rowArr = boardUser[cellIdx[1]];
-  const colIdx = cellIdx[0];
-  rowArr[colIdx] = "s";
-  render();
-}
+// function handleUserPlacementClick(cell) {
+//   //changes one cell in the model
+//   if (game) return;
+//   const cellId = cell;
+//   const cellIdx = getIdx(cellId);
+//   boardUser[cellIdx[1]][cellIdx[0]] = "s";
+//   render();
+// }
 
 function handleShipPlacement(cellId, length) {
-  //changes other cells in the model
+  //changes  cells in the model
   const cellIdx = getIdx(cellId);
-  const rowArr = boardUser[cellIdx[1]];
-  const colIdx = cellIdx[0];
-  const currIdx = colIdx;
-  for (let i = 1; i < length; i++) {
-    if (currIdx + i > 9) {
-      rowArr[colIdx - 1] = "s";
-    } else {
-      rowArr[colIdx + i] = "s";
+  let rowIdx = cellIdx[1];
+  let colIdx = cellIdx[0];
+  if (
+    boardUser[rowIdx][colIdx] === 0 &&
+    (rowIdx === 0 || boardUser[rowIdx - 1][colIdx] === 0) &&
+    (rowIdx === 9 || boardUser[rowIdx + 1][colIdx] === 0) &&
+    (colIdx === 0 || boardUser[rowIdx][colIdx - 1] === 0) &&
+    (colIdx === 9 || boardUser[rowIdx][colIdx + 1] === 0)
+  ) {
+    let currCells = [cellIdx];
+    for (let i = 1; i < length; i++) {
+      if (shipIsRotated === true) {
+        rowIdx = rowIdx + 1;
+        if (
+          rowIdx >= 0 &&
+          rowIdx <= 9 &&
+          boardUser[rowIdx][colIdx] === 0 &&
+          (rowIdx === 9 || boardUser[rowIdx + 1][colIdx] === 0) &&
+          (colIdx === 0 || boardUser[rowIdx][colIdx - 1] === 0) &&
+          (colIdx === 9 || boardUser[rowIdx][colIdx + 1] === 0)
+        ) {
+          currCells.push([colIdx, rowIdx]);
+        } else return false;
+      } else {
+        colIdx = colIdx + 1;
+        if (
+          colIdx >= 0 &&
+          colIdx <= 9 &&
+          boardComp[rowIdx][colIdx] === 0 &&
+          (rowIdx === 0 || boardUser[rowIdx - 1][colIdx] === 0) &&
+          (rowIdx === 9 || boardUser[rowIdx + 1][colIdx] === 0) &&
+          (colIdx === 9 || boardUser[rowIdx][colIdx + 1] === 0)
+        ) {
+          currCells.push([colIdx, rowIdx]);
+        } else return false;
+      }
     }
-  }
-  render();
+    currCells.forEach((cell) => {
+      let row = boardUser[cell[1]];
+      let col = cell[0];
+      row[col] = "s";
+    });
+    shipIsPlaced = true;
+    render();
+  } else return false;
 }
 
 //helper function
@@ -199,7 +237,10 @@ function handleDragStart(evt) {
   console.log(evt);
   dragged = evt.target;
   evt.target.style.opacity = "0.4";
-  shipLength = evt.target.className;
+  const classListArr = [...evt.target.classList];
+  shipLength = classListArr[0];
+  if (classListArr.includes("rotated")) shipIsRotated = true;
+  else shipIsRotated = false;
 }
 
 function handleDragEnd(evt) {
@@ -215,13 +256,22 @@ function handleDragOver(evt) {
 function handleDrop(evt) {
   evt.stopPropagation();
   if (evt.target.parentElement.id === "board-user") {
-    dragged.parentNode.removeChild(dragged);
-    dragged.opacity = "";
-    handleUserPlacementClick(evt.target.id);
     handleShipPlacement(evt.target.id, shipLength);
+    if (shipIsPlaced === true) {
+      dragged.parentNode.removeChild(dragged);
+      dragged.opacity = "";
+    }
     if (checkShips(boardUser) === 30) startGameBtn.classList.remove("hidden");
     // return false;
   }
+}
+
+//function for rotating
+
+function handleRotate(evt) {
+  console.log(evt);
+  if (evt.target.nodeName !== "IMG") return;
+  evt.target.classList.toggle("rotated");
 }
 
 //starting game
