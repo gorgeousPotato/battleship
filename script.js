@@ -156,7 +156,7 @@ function renderMessage() {
 }
 
 function renderScore() {
-  scoreEl.innerHTML = `${score["u"]}   :   ${score["c"]}`;
+  scoreEl.innerHTML = `You:  ${score["u"]} \u00A0\u00A0\u00A0\u00A0 Computer:  ${score["c"]}`;
 }
 
 function handleShipPlacement(cellId, length) {
@@ -381,11 +381,14 @@ function computerShipPlacement() {
 
 function handleUserShoot(evt) {
   const cellIdx = getIdx(evt.target.id);
-  const rowIdx = cellIdx[1];
-  const colIdx = cellIdx[0];
+  let rowIdx = cellIdx[1];
+  let colIdx = cellIdx[0];
+  if (evt.target.parentElement.id !== "board-comp") return;
   //if a cell is empty
   if (boardComp[rowIdx][colIdx] === 0) {
+    boardComp[rowIdx][colIdx] = "m";
     turn = false;
+    render();
     return;
     //if a cell is occupied
   } else if (boardComp[rowIdx][colIdx] === "sc") {
@@ -393,18 +396,41 @@ function handleUserShoot(evt) {
     if (
       (rowIdx === 9 ||
         boardComp[rowIdx + 1][colIdx] === 0 ||
-        boardComp[rowIdx + 1][colIdx] === "i") &&
+        boardComp[rowIdx + 1][colIdx] === "i" ||
+        boardComp[rowIdx + 1][colIdx] === "m") &&
       (rowIdx === 0 ||
         boardComp[rowIdx - 1][colIdx] === 0 ||
-        boardComp[rowIdx - 1][colIdx] === "i") &&
+        boardComp[rowIdx - 1][colIdx] === "i" ||
+        boardComp[rowIdx - 1][colIdx] === "m") &&
       (colIdx === 9 ||
         boardComp[rowIdx][colIdx + 1] === 0 ||
-        boardComp[rowIdx][colIdx + 1] === "i") &&
+        boardComp[rowIdx][colIdx + 1] === "i" ||
+        boardComp[rowIdx][colIdx + 1] === "m") &&
       (colIdx === 0 ||
         boardComp[rowIdx][colIdx - 1] === 0 ||
-        boardComp[rowIdx][colIdx - 1] === "i")
+        boardComp[rowIdx][colIdx - 1] === "i" ||
+        boardComp[rowIdx][colIdx - 1] === "m")
     ) {
       boardComp[rowIdx][colIdx] = "k";
+      score.u += 1;
+      turn = false;
+      //variable to check if there are any injured ship cells left
+      let shipIsComplete = false;
+      while (shipIsComplete !== true) {
+        if (rowIdx !== 9 && boardComp[rowIdx + 1][colIdx] === "i") {
+          rowIdx += 1;
+          boardComp[rowIdx][colIdx] = "k";
+        } else if (rowIdx !== 0 && boardComp[rowIdx - 1][colIdx] === "i") {
+          rowIdx -= 1;
+          boardComp[rowIdx][colIdx] = "k";
+        } else if (colIdx !== 9 && boardComp[rowIdx][colIdx + 1] === "i") {
+          colIdx += 1;
+          boardComp[rowIdx][colIdx] = "k";
+        } else if (colIdx !== 0 && boardComp[rowIdx][colIdx - 1] === "i") {
+          colIdx -= 1;
+          boardComp[rowIdx][colIdx] = "k";
+        } else shipIsComplete = true;
+      }
     } else {
       boardComp[rowIdx][colIdx] = "i";
     }

@@ -38,7 +38,7 @@ header h1 {
 }
 
 header h2 {
-  font-size: 1.4rem;
+  font-size: 2rem;
   margin: 0 10rem;
 }
 
@@ -115,6 +115,7 @@ section h2 {
 
 #score {
   text-align: center;
+  font-size: 2rem;
 }
 
 footer {
