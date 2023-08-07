@@ -397,53 +397,101 @@ function handleUserShoot(evt) {
     return;
     //if a cell is occupied
   } else if (boardComp[rowIdx][colIdx] === "sc") {
-    //checking if there are anu other cells of this ship left, if no, the ship is killed, otherwise it's injured
-    if (
-      (rowIdx === 9 ||
-        boardComp[rowIdx + 1][colIdx] === 0 ||
-        boardComp[rowIdx + 1][colIdx] === "i" ||
-        boardComp[rowIdx + 1][colIdx] === "m") &&
-      (rowIdx === 0 ||
-        boardComp[rowIdx - 1][colIdx] === 0 ||
-        boardComp[rowIdx - 1][colIdx] === "i" ||
-        boardComp[rowIdx - 1][colIdx] === "m") &&
-      (colIdx === 9 ||
-        boardComp[rowIdx][colIdx + 1] === 0 ||
-        boardComp[rowIdx][colIdx + 1] === "i" ||
-        boardComp[rowIdx][colIdx + 1] === "m") &&
-      (colIdx === 0 ||
-        boardComp[rowIdx][colIdx - 1] === 0 ||
-        boardComp[rowIdx][colIdx - 1] === "i" ||
-        boardComp[rowIdx][colIdx - 1] === "m")
-    ) {
-      boardComp[rowIdx][colIdx] = "k";
-      score.u += 1;
-      turn = false;
-      //variable to check if there are any injured ship cells left
-      let shipIsComplete = false;
-      while (shipIsComplete !== true) {
-        if (rowIdx !== 9 && boardComp[rowIdx + 1][colIdx] === "i") {
-          rowIdx += 1;
-          boardComp[rowIdx][colIdx] = "k";
-        } else if (rowIdx !== 0 && boardComp[rowIdx - 1][colIdx] === "i") {
-          rowIdx -= 1;
-          boardComp[rowIdx][colIdx] = "k";
-        } else if (colIdx !== 9 && boardComp[rowIdx][colIdx + 1] === "i") {
-          colIdx += 1;
-          boardComp[rowIdx][colIdx] = "k";
-        } else if (colIdx !== 0 && boardComp[rowIdx][colIdx - 1] === "i") {
-          colIdx -= 1;
-          boardComp[rowIdx][colIdx] = "k";
-        } else shipIsComplete = true;
-      }
+    boardComp[rowIdx][colIdx] = "i";
+    render();
+    //checking on which direction injured cells are left, if any
+    let direction;
+    if (rowIdx !== 9 && boardComp[rowIdx + 1][colIdx] === "i") {
+      direction = "v";
+    } else if (rowIdx !== 0 && boardComp[rowIdx - 1][colIdx] === "i") {
+      direction = "v";
+    } else if (colIdx !== 9 && boardComp[rowIdx][colIdx + 1] === "i") {
+      direction = "h";
+    } else if (colIdx !== 0 && boardComp[rowIdx][colIdx - 1] === "i") {
+      direction = "h";
     } else {
-      boardComp[rowIdx][colIdx] = "i";
       render();
       return;
     }
+    let initialRowIdx = rowIdx;
+    let initialColIdx = colIdx;
+    let isKilled = false;
+    let injuredShipCells = [[rowIdx, colIdx]];
+    //checking if both sides of both directions contain injured cells
+    if (direction === "v") {
+      let shipIsComplete = false;
+
+      while (shipIsComplete !== true) {
+        if (rowIdx !== 9 && boardComp[rowIdx + 1][colIdx] === "i") {
+          rowIdx += 1;
+          injuredShipCells.push([rowIdx, colIdx]);
+        } else {
+          shipIsComplete = true;
+        }
+      }
+      rowIdx = initialRowIdx;
+      shipIsComplete = false;
+      while (shipIsComplete !== true) {
+        if (rowIdx !== 0 && boardComp[rowIdx - 1][colIdx] === "i") {
+          rowIdx -= 1;
+          injuredShipCells.push([rowIdx, colIdx]);
+        } else {
+          shipIsComplete = true;
+        }
+      }
+      isKilled = false;
+      injuredShipCells.forEach((cell) => {
+        if (cell[0] !== 9 && boardComp[cell[0] + 1][cell[1]] === "sc") {
+          isKilled = true;
+        }
+        if (cell[0] !== 0 && boardComp[cell[0] - 1][cell[1]] === "sc") {
+          isKilled = true;
+        }
+      });
+    } else if (direction === "h") {
+      //these two variables store the information if there's any injures cells left and if there's any ship cells left
+      let shipIsComplete = false;
+
+      while (shipIsComplete !== true) {
+        if (colIdx !== 9 && boardComp[rowIdx][colIdx + 1] === "i") {
+          colIdx += 1;
+          injuredShipCells.push([rowIdx, colIdx]);
+        } else {
+          shipIsComplete = true;
+        }
+      }
+      colIdx = initialColIdx;
+      shipIsComplete = false;
+      while (shipIsComplete !== true) {
+        if (colIdx !== 0 && boardComp[rowIdx][colIdx - 1] === "i") {
+          colIdx -= 1;
+          injuredShipCells.push([rowIdx, colIdx]);
+        } else {
+          shipIsComplete = true;
+        }
+      }
+      isKilled = false;
+      injuredShipCells.forEach((cell) => {
+        if (cell[1] !== 9 && boardComp[cell[0]][cell[1] + 1] === "sc") {
+          isKilled = true;
+        }
+        if (cell[1] !== 0 && boardComp[cell[0]][cell[1] - 1] === "sc") {
+          isKilled = true;
+        }
+      });
+    }
+    console.log(injuredShipCells);
+    if (isKilled === "true") {
+      render();
+      return;
+    } else if (isKilled === false) {
+      score.u += 1;
+      injuredShipCells.forEach((cell) => {
+        boardComp[cell[0]][cell[1]] = "k";
+      });
+      render();
+    }
   }
-  setTimeout(computerRandomShoot, 1000);
-  render();
 }
 
 //computer's shooting function (random for now, AI - later)
