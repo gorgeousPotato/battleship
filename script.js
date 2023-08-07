@@ -1,9 +1,3 @@
-/*----- constants -----*/
-// const TURN = {
-//   1: "user",
-//   "-1": "comp",
-// };
-
 const CONDITION = {
   0: "", //empty
   s: "⚪️", //user's ship
@@ -12,29 +6,6 @@ const CONDITION = {
   k: "🔥", //killed
   m: "✖️", //miss
 };
-
-// const SHIPS = {
-//   cr: {
-//     name: "carrier",
-//     cells: 5,
-//     quantity: 1,
-//   },
-//   bt: {
-//     name: "battleship",
-//     cells: 4,
-//     quantity: 2,
-//   },
-//   sb: {
-//     name: "submarine",
-//     cells: 3,
-//     quantity: 3,
-//   },
-//   pt: {
-//     name: "patrol boat",
-//     cells: 2,
-//     quantity: 4,
-//   },
-// };
 
 /*----- state variables -----*/
 let boardUser, boardComp;
@@ -149,6 +120,8 @@ function renderMessage() {
     messageEl.innerText = `${turn === true ? "Your" : "Computer's"} turn`;
 
     //if game hasn't begun, the instruction on how to place ships is rendered
+  } else if (winner) {
+    messageEl.innerHTML = `${winner} won!`;
   } else {
     messageEl.innerHTML = `Drag a ship to place it, click to rotate ⬇️`;
     messageEl.style.textAlign = "right";
@@ -384,6 +357,7 @@ function computerShipPlacement() {
 //user's shooting function
 
 function handleUserShoot(evt) {
+  if (!game) return;
   const cellIdx = getIdx(evt.target.id);
   let rowIdx = cellIdx[1];
   let colIdx = cellIdx[0];
@@ -489,6 +463,8 @@ function handleUserShoot(evt) {
       injuredShipCells.forEach((cell) => {
         boardComp[cell[0]][cell[1]] = "k";
       });
+      getWinner();
+      if (winner) game = false;
       render();
     }
   }
@@ -600,7 +576,15 @@ function computerRandomShoot() {
       injuredShipCells.forEach((cell) => {
         boardUser[cell[0]][cell[1]] = "k";
       });
+      getWinner();
+      if (winner) game = false;
       render();
     }
   }
+}
+
+function getWinner() {
+  if (score.u === 10) winner = "You";
+  else if (score.c === 10) winner = "Computer";
+  return winner;
 }
