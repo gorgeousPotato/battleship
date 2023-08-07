@@ -1,8 +1,8 @@
 /*----- constants -----*/
-const TURN = {
-  1: "user",
-  "-1": "comp",
-};
+// const TURN = {
+//   1: "user",
+//   "-1": "comp",
+// };
 
 const CONDITION = {
   0: "", //empty
@@ -13,33 +13,33 @@ const CONDITION = {
   m: "✖️", //miss
 };
 
-const SHIPS = {
-  cr: {
-    name: "carrier",
-    cells: 5,
-    quantity: 1,
-  },
-  bt: {
-    name: "battleship",
-    cells: 4,
-    quantity: 2,
-  },
-  sb: {
-    name: "submarine",
-    cells: 3,
-    quantity: 3,
-  },
-  pt: {
-    name: "patrol boat",
-    cells: 2,
-    quantity: 4,
-  },
-};
+// const SHIPS = {
+//   cr: {
+//     name: "carrier",
+//     cells: 5,
+//     quantity: 1,
+//   },
+//   bt: {
+//     name: "battleship",
+//     cells: 4,
+//     quantity: 2,
+//   },
+//   sb: {
+//     name: "submarine",
+//     cells: 3,
+//     quantity: 3,
+//   },
+//   pt: {
+//     name: "patrol boat",
+//     cells: 2,
+//     quantity: 4,
+//   },
+// };
 
 /*----- state variables -----*/
 let boardUser, boardComp;
 let game; //is true when the user and the computer make guesses, is wrong when they are placing ships
-let turn; // 1 for user, -1 for computer
+let turn; // true for user, false for computer
 let winner;
 let score;
 let currShip; //represents which ship is being placed, maybe will delete this
@@ -71,6 +71,8 @@ shipEls.forEach((ship) => {
 });
 
 startGameBtn.addEventListener("click", handleGameStart);
+
+boardCompEl.addEventListener("click", handleUserShoot);
 
 /*----- functions -----*/
 init();
@@ -107,7 +109,7 @@ function init() {
     c: 0,
   };
 
-  turn = 1;
+  turn = true;
   winner = null;
   currShip = "cr";
   game = false;
@@ -142,12 +144,13 @@ function renderBoardUser() {
 }
 
 function renderMessage() {
-  //if game has begun (game === 1), turn is rendered
+  //if game has begun (game === true), turn is rendered
   if (game) {
-    messageEl.innerHTML = `${turn === 1 ? "Your" : "Computer's"} turn`;
+    messageEl.innerText = `${turn === true ? "Your" : "Computer's"} turn`;
+
     //if game hasn't begun, the instruction on how to place ships is rendered
   } else {
-    messageEl.innerHTML = `Click a ship to place it ⬇️`;
+    messageEl.innerHTML = `Drag a ship to place it, click to rotate ⬇️`;
     messageEl.style.textAlign = "right";
   }
 }
@@ -155,15 +158,6 @@ function renderMessage() {
 function renderScore() {
   scoreEl.innerHTML = `${score["u"]}   :   ${score["c"]}`;
 }
-
-// function handleUserPlacementClick(cell) {
-//   //changes one cell in the model
-//   if (game) return;
-//   const cellId = cell;
-//   const cellIdx = getIdx(cellId);
-//   boardUser[cellIdx[1]][cellIdx[0]] = "s";
-//   render();
-// }
 
 function handleShipPlacement(cellId, length) {
   //changes  cells in the model
@@ -282,14 +276,15 @@ function handleRotate(evt) {
 //starting game
 
 function handleGameStart() {
-  let game = true;
+  game = true;
   computerShipPlacement();
   document.getElementById("ships-to-drag-container").classList.add("hidden");
   document.getElementById("board-comp-container").classList.remove("hidden");
   startGameBtn.classList.add("hidden");
   scoreEl.classList.remove("hidden");
-  messageEl.innerHTML = "Your turn!";
+  // messageEl.innerHTML = "Your turn!";
   messageEl.style.textAlign = "center";
+  render();
 }
 
 //helper function placing a ship to a random cell
@@ -382,7 +377,38 @@ function computerShipPlacement() {
   doUntilPlaced(2);
   doUntilPlaced(2);
   doUntilPlaced(2);
-  // doUntilPlaced(1);
-  // doUntilPlaced(1);
-  // doUntilPlaced(1);
+}
+
+function handleUserShoot(evt) {
+  const cellIdx = getIdx(evt.target.id);
+  const rowIdx = cellIdx[1];
+  const colIdx = cellIdx[0];
+  //if a cell is empty
+  if (boardComp[rowIdx][colIdx] === 0) {
+    turn = false;
+    return;
+    //if a cell is occupied
+  } else if (boardComp[rowIdx][colIdx] === "sc") {
+    //checking if there are anu other cells of this ship left, if no, the ship is killed, otherwise it's injured
+    if (
+      (rowIdx === 9 ||
+        boardComp[rowIdx + 1][colIdx] === 0 ||
+        boardComp[rowIdx + 1][colIdx] === "i") &&
+      (rowIdx === 0 ||
+        boardComp[rowIdx - 1][colIdx] === 0 ||
+        boardComp[rowIdx - 1][colIdx] === "i") &&
+      (colIdx === 9 ||
+        boardComp[rowIdx][colIdx + 1] === 0 ||
+        boardComp[rowIdx][colIdx + 1] === "i") &&
+      (colIdx === 0 ||
+        boardComp[rowIdx][colIdx - 1] === 0 ||
+        boardComp[rowIdx][colIdx - 1] === "i")
+    ) {
+      boardComp[rowIdx][colIdx] = "k";
+    } else {
+      boardComp[rowIdx][colIdx] = "i";
+    }
+  }
+
+  render();
 }
