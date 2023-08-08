@@ -18,7 +18,10 @@ let shipLength; //represents the length of a ship being placed currently
 let shipIsRotated; //represents if a user's ship is rotated
 let shipIsPlaced;
 let dragged; //to store info about a ship currently being dragged
+//for computer's AI shooting, maybe will remove them from global scope
 let targets = null;
+let firstRowIdx; //to store the first injured cell's row idx
+let firstColIdx; //to store the first injured cell's col idx
 
 /*----- cached elements  -----*/
 const messageEl = document.getElementById("turn");
@@ -594,10 +597,26 @@ function handleUserShoot(evt) {
 // }
 
 function computerRandomShoot() {
+  let rowIdx;
+  let colIdx;
+
+  let nextCellIdx; //to store the next cell from targets array
+
   if (!targets) {
-    const cellIdx = randomCellIdx();
-    let rowIdx = cellIdx[1];
-    let colIdx = cellIdx[0];
+    let cellIdx;
+    //while loop to check if a random cell is empty
+    let cellIsEmpty = false;
+    while (cellIsEmpty !== true) {
+      cellIdx = randomCellIdx();
+      if (
+        boardUser[cellIdx[1]][cellIdx[0]] === 0 ||
+        boardUser[cellIdx[1]][cellIdx[0]] === "s"
+      )
+        cellIsEmpty = true;
+    }
+    rowIdx = cellIdx[1];
+    colIdx = cellIdx[0];
+
     //if a cell is empty
     if (boardUser[rowIdx][colIdx] === 0) {
       boardUser[rowIdx][colIdx] = "m";
@@ -606,108 +625,175 @@ function computerRandomShoot() {
       return;
     } else if (boardUser[rowIdx][colIdx] === "s") {
       boardUser[rowIdx][colIdx] = "i";
+      firstRowIdx = rowIdx;
+      firstColIdx = colIdx;
       render();
       targets = [];
-      if (rowIdx !== 0) targets.push([colIdx, rowIdx - 1]);
-      if (rowIdx !== 9) targets.push([colIdx, rowIdx + 1]);
-      if (colIdx !== 0) targets.push([colIdx - 1, rowIdx]);
-      if (colIdx !== 9) targets.push([colIdx + 1, rowIdx]);
+      targets.push(
+        [colIdx, rowIdx - 1],
+        [colIdx, rowIdx + 1],
+        [colIdx - 1, rowIdx],
+        [colIdx + 1, rowIdx]
+      );
+
+      // if (rowIdx !== 0) targets.push([colIdx, rowIdx - 1]);
+      // if (rowIdx !== 9) targets.push([colIdx, rowIdx + 1]);
+      // if (colIdx !== 0) targets.push([colIdx - 1, rowIdx]);
+      // if (colIdx !== 9) targets.push([colIdx + 1, rowIdx]);
+    }
+  } else if (targets) {
+    console.log(targets);
+
+    //while loop to check if a target cell !== undegined and !== injured
+    let cellIsEmpty = false;
+    while (cellIsEmpty !== true) {
+      nextCellIdx = targets.pop();
+      console.log(nextCellIdx);
+      if (
+        nextCellIdx[1] >= 0 &&
+        nextCellIdx[1] <= 9 &&
+        nextCellIdx[0] >= 0 &&
+        nextCellIdx[0] <= 9 &&
+        boardUser[nextCellIdx[1]][nextCellIdx[0]] !== "i" &&
+        boardUser[nextCellIdx[1]][nextCellIdx[0]] !== "m"
+      )
+        cellIsEmpty = true;
+    }
+    rowIdx = nextCellIdx[1];
+    colIdx = nextCellIdx[0];
+
+    if (boardUser[rowIdx][colIdx] === 0) {
+      boardUser[rowIdx][colIdx] = "m";
+      turn = true;
+      render();
+      return;
+    } else if (boardUser[rowIdx][colIdx] === "s") {
+      boardUser[rowIdx][colIdx] = "i";
+      targets = [];
+      console.log(firstRowIdx, rowIdx);
+      console.log(firstColIdx, colIdx);
+      //checking either rows or columns are equal, so that we can assign new target cells
+      if (rowIdx === firstRowIdx) {
+        console.log("hi");
+        if (colIdx > firstColIdx) {
+          targets.push([firstColIdx - 1, rowIdx], [colIdx + 1, rowIdx]);
+        } else {
+          targets.push([colIdx - 1, rowIdx], [firstColIdx + 1, rowIdx]);
+        }
+      } else if (colIdx === firstColIdx) {
+        console.log("hi");
+        if (rowIdx > firstRowIdx) {
+          targets.push([colIdx, rowIdx - 1], [colIdx, firstRowIdx + 1]);
+        } else {
+          targets.push([colIdx, firstRowIdx - 1], [colIdx, rowIdx + 1]);
+        }
+      }
+      render();
       console.log(targets);
+      // if (rowIdx !== 0) targets.push([colIdx, rowIdx - 1]);
+      // if (rowIdx !== 9) targets.push([colIdx, rowIdx + 1]);
+      // if (colIdx !== 0) targets.push([colIdx - 1, rowIdx]);
+      // if (colIdx !== 9) targets.push([colIdx + 1, rowIdx]);
+      // console.log(targets);
     }
-    //checking on which direction injured cells are left, if any
-    let direction;
-    if (rowIdx !== 9 && boardUser[rowIdx + 1][colIdx] === "i") {
-      direction = "v";
-    } else if (rowIdx !== 0 && boardUser[rowIdx - 1][colIdx] === "i") {
-      direction = "v";
-    } else if (colIdx !== 9 && boardUser[rowIdx][colIdx + 1] === "i") {
-      direction = "h";
-    } else if (colIdx !== 0 && boardUser[rowIdx][colIdx - 1] === "i") {
-      direction = "h";
-    } else {
-      render();
-      return;
-    }
-    let initialRowIdx = rowIdx;
-    let initialColIdx = colIdx;
-    let isKilled = false;
-    let injuredShipCells = [[rowIdx, colIdx]];
-    //checking if both sides of both directions contain injured cells
-    if (direction === "v") {
-      let shipIsComplete = false;
+  }
 
-      while (shipIsComplete !== true) {
-        if (rowIdx !== 9 && boardUser[rowIdx + 1][colIdx] === "i") {
-          rowIdx += 1;
-          injuredShipCells.push([rowIdx, colIdx]);
-        } else {
-          shipIsComplete = true;
-        }
-      }
-      rowIdx = initialRowIdx;
-      shipIsComplete = false;
-      while (shipIsComplete !== true) {
-        if (rowIdx !== 0 && boardUser[rowIdx - 1][colIdx] === "i") {
-          rowIdx -= 1;
-          injuredShipCells.push([rowIdx, colIdx]);
-        } else {
-          shipIsComplete = true;
-        }
-      }
-      isKilled = false;
-      injuredShipCells.forEach((cell) => {
-        if (cell[0] !== 9 && boardUser[cell[0] + 1][cell[1]] === "s") {
-          isKilled = true;
-        }
-        if (cell[0] !== 0 && boardUser[cell[0] - 1][cell[1]] === "s") {
-          isKilled = true;
-        }
-      });
-    } else if (direction === "h") {
-      //these two variables store the information if there's any injures cells left and if there's any ship cells left
-      let shipIsComplete = false;
+  //checking on which direction injured cells are left, if any
+  let direction;
+  if (rowIdx !== 9 && boardUser[rowIdx + 1][colIdx] === "i") {
+    direction = "v";
+  } else if (rowIdx !== 0 && boardUser[rowIdx - 1][colIdx] === "i") {
+    direction = "v";
+  } else if (colIdx !== 9 && boardUser[rowIdx][colIdx + 1] === "i") {
+    direction = "h";
+  } else if (colIdx !== 0 && boardUser[rowIdx][colIdx - 1] === "i") {
+    direction = "h";
+  } else {
+    render();
+    return;
+  }
+  let initialRowIdx = rowIdx;
+  let initialColIdx = colIdx;
+  let isKilled = false;
+  let injuredShipCells = [[rowIdx, colIdx]];
+  //checking if both sides of both directions contain injured cells
+  if (direction === "v") {
+    let shipIsComplete = false;
 
-      while (shipIsComplete !== true) {
-        if (colIdx !== 9 && boardUser[rowIdx][colIdx + 1] === "i") {
-          colIdx += 1;
-          injuredShipCells.push([rowIdx, colIdx]);
-        } else {
-          shipIsComplete = true;
-        }
+    while (shipIsComplete !== true) {
+      if (rowIdx !== 9 && boardUser[rowIdx + 1][colIdx] === "i") {
+        rowIdx += 1;
+        injuredShipCells.push([rowIdx, colIdx]);
+      } else {
+        shipIsComplete = true;
       }
-      colIdx = initialColIdx;
-      shipIsComplete = false;
-      while (shipIsComplete !== true) {
-        if (colIdx !== 0 && boardUser[rowIdx][colIdx - 1] === "i") {
-          colIdx -= 1;
-          injuredShipCells.push([rowIdx, colIdx]);
-        } else {
-          shipIsComplete = true;
-        }
-      }
-      isKilled = false;
-      injuredShipCells.forEach((cell) => {
-        if (cell[1] !== 9 && boardUser[cell[0]][cell[1] + 1] === "s") {
-          isKilled = true;
-        }
-        if (cell[1] !== 0 && boardUser[cell[0]][cell[1] - 1] === "s") {
-          isKilled = true;
-        }
-      });
     }
+    rowIdx = initialRowIdx;
+    shipIsComplete = false;
+    while (shipIsComplete !== true) {
+      if (rowIdx !== 0 && boardUser[rowIdx - 1][colIdx] === "i") {
+        rowIdx -= 1;
+        injuredShipCells.push([rowIdx, colIdx]);
+      } else {
+        shipIsComplete = true;
+      }
+    }
+    isKilled = false;
+    injuredShipCells.forEach((cell) => {
+      if (cell[0] !== 9 && boardUser[cell[0] + 1][cell[1]] === "s") {
+        isKilled = true;
+      }
+      if (cell[0] !== 0 && boardUser[cell[0] - 1][cell[1]] === "s") {
+        isKilled = true;
+      }
+    });
+  } else if (direction === "h") {
+    //these two variables store the information if there's any injures cells left and if there's any ship cells left
+    let shipIsComplete = false;
 
-    if (isKilled === "true") {
-      render();
-      return;
-    } else if (isKilled === false) {
-      score.c += 1;
-      injuredShipCells.forEach((cell) => {
-        boardUser[cell[0]][cell[1]] = "k";
-      });
-      getWinner();
-      if (winner) game = false;
-      render();
+    while (shipIsComplete !== true) {
+      if (colIdx !== 9 && boardUser[rowIdx][colIdx + 1] === "i") {
+        colIdx += 1;
+        injuredShipCells.push([rowIdx, colIdx]);
+      } else {
+        shipIsComplete = true;
+      }
     }
+    colIdx = initialColIdx;
+    shipIsComplete = false;
+    while (shipIsComplete !== true) {
+      if (colIdx !== 0 && boardUser[rowIdx][colIdx - 1] === "i") {
+        colIdx -= 1;
+        injuredShipCells.push([rowIdx, colIdx]);
+      } else {
+        shipIsComplete = true;
+      }
+    }
+    isKilled = false;
+    injuredShipCells.forEach((cell) => {
+      if (cell[1] !== 9 && boardUser[cell[0]][cell[1] + 1] === "s") {
+        isKilled = true;
+      }
+      if (cell[1] !== 0 && boardUser[cell[0]][cell[1] - 1] === "s") {
+        isKilled = true;
+      }
+    });
+  }
+
+  if (isKilled === "true") {
+    render();
+    return;
+  } else if (isKilled === false) {
+    score.c += 1;
+    injuredShipCells.forEach((cell) => {
+      boardUser[cell[0]][cell[1]] = "k";
+    });
+    targets = null;
+    firstColIdx = null;
+    firstRowIdx = null;
+    getWinner();
+    if (winner) game = false;
+    render();
   }
 }
 
@@ -715,4 +801,11 @@ function getWinner() {
   if (score.u === 10) winner = "You";
   else if (score.c === 10) winner = "Computer";
   return winner;
+}
+
+//helper function for getting a random number, for choosing one if the potential targets in targets array
+
+function randomTarget(length) {
+  const randomNum = Math.floor(Math.random() * length);
+  return randomNum;
 }
