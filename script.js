@@ -18,6 +18,7 @@ let shipLength; //represents the length of a ship being placed currently
 let shipIsRotated; //represents if a user's ship is rotated
 let shipIsPlaced;
 let dragged; //to store info about a ship currently being dragged
+let targets = null;
 
 /*----- cached elements  -----*/
 const messageEl = document.getElementById("turn");
@@ -472,20 +473,147 @@ function handleUserShoot(evt) {
 
 //computer's shooting function (random for now, AI - later)
 
+//working version below
+
+// function computerRandomShoot() {
+//
+//   const cellIdx = randomCellIdx();
+//   let rowIdx = cellIdx[1];
+//   let colIdx = cellIdx[0];
+//   //if a cell is empty
+//   if (boardUser[rowIdx][colIdx] === 0) {
+//     boardUser[rowIdx][colIdx] = "m";
+//     turn = true;
+//     render();
+//     return;
+//     //if a cell is occupied
+//   } else if (boardUser[rowIdx][colIdx] === "s") {
+//     boardUser[rowIdx][colIdx] = "i";
+//     render();
+//     //checking on which direction injured cells are left, if any
+//     let direction;
+//     if (rowIdx !== 9 && boardUser[rowIdx + 1][colIdx] === "i") {
+//       direction = "v";
+//     } else if (rowIdx !== 0 && boardUser[rowIdx - 1][colIdx] === "i") {
+//       direction = "v";
+//     } else if (colIdx !== 9 && boardUser[rowIdx][colIdx + 1] === "i") {
+//       direction = "h";
+//     } else if (colIdx !== 0 && boardUser[rowIdx][colIdx - 1] === "i") {
+//       direction = "h";
+//     } else {
+//       render();
+//       return;
+//     }
+//     let initialRowIdx = rowIdx;
+//     let initialColIdx = colIdx;
+//     let isKilled = false;
+//     let injuredShipCells = [[rowIdx, colIdx]];
+//     //checking if both sides of both directions contain injured cells
+//     if (direction === "v") {
+//       let shipIsComplete = false;
+
+//       while (shipIsComplete !== true) {
+//         if (rowIdx !== 9 && boardUser[rowIdx + 1][colIdx] === "i") {
+//           rowIdx += 1;
+//           injuredShipCells.push([rowIdx, colIdx]);
+//         } else {
+//           shipIsComplete = true;
+//         }
+//       }
+//       rowIdx = initialRowIdx;
+//       shipIsComplete = false;
+//       while (shipIsComplete !== true) {
+//         if (rowIdx !== 0 && boardUser[rowIdx - 1][colIdx] === "i") {
+//           rowIdx -= 1;
+//           injuredShipCells.push([rowIdx, colIdx]);
+//         } else {
+//           shipIsComplete = true;
+//         }
+//       }
+//       isKilled = false;
+//       injuredShipCells.forEach((cell) => {
+//         if (cell[0] !== 9 && boardUser[cell[0] + 1][cell[1]] === "s") {
+//           isKilled = true;
+//         }
+//         if (cell[0] !== 0 && boardUser[cell[0] - 1][cell[1]] === "s") {
+//           isKilled = true;
+//         }
+//       });
+//     } else if (direction === "h") {
+//       //these two variables store the information if there's any injures cells left and if there's any ship cells left
+//       let shipIsComplete = false;
+
+//       while (shipIsComplete !== true) {
+//         if (colIdx !== 9 && boardUser[rowIdx][colIdx + 1] === "i") {
+//           colIdx += 1;
+//           injuredShipCells.push([rowIdx, colIdx]);
+//         } else {
+//           shipIsComplete = true;
+//         }
+//       }
+//       colIdx = initialColIdx;
+//       shipIsComplete = false;
+//       while (shipIsComplete !== true) {
+//         if (colIdx !== 0 && boardUser[rowIdx][colIdx - 1] === "i") {
+//           colIdx -= 1;
+//           injuredShipCells.push([rowIdx, colIdx]);
+//         } else {
+//           shipIsComplete = true;
+//         }
+//       }
+//       isKilled = false;
+//       injuredShipCells.forEach((cell) => {
+//         if (cell[1] !== 9 && boardUser[cell[0]][cell[1] + 1] === "s") {
+//           isKilled = true;
+//         }
+//         if (cell[1] !== 0 && boardUser[cell[0]][cell[1] - 1] === "s") {
+//           isKilled = true;
+//         }
+//       });
+//     }
+
+//     if (isKilled === "true") {
+//       render();
+//       return;
+//     } else if (isKilled === false) {
+//       score.c += 1;
+//       injuredShipCells.forEach((cell) => {
+//         boardUser[cell[0]][cell[1]] = "k";
+//       });
+//       getWinner();
+//       if (winner) game = false;
+//       render();
+//     }
+//   }
+// }
+
+// function getWinner() {
+//   if (score.u === 10) winner = "You";
+//   else if (score.c === 10) winner = "Computer";
+//   return winner;
+// }
+
 function computerRandomShoot() {
-  const cellIdx = randomCellIdx();
-  let rowIdx = cellIdx[1];
-  let colIdx = cellIdx[0];
-  //if a cell is empty
-  if (boardUser[rowIdx][colIdx] === 0) {
-    boardUser[rowIdx][colIdx] = "m";
-    turn = true;
-    render();
-    return;
-    //if a cell is occupied
-  } else if (boardUser[rowIdx][colIdx] === "s") {
-    boardUser[rowIdx][colIdx] = "i";
-    render();
+  if (!targets) {
+    const cellIdx = randomCellIdx();
+    let rowIdx = cellIdx[1];
+    let colIdx = cellIdx[0];
+    //if a cell is empty
+    if (boardUser[rowIdx][colIdx] === 0) {
+      boardUser[rowIdx][colIdx] = "m";
+      turn = true;
+      render();
+      return;
+    } else if (boardUser[rowIdx][colIdx] === "s") {
+      boardUser[rowIdx][colIdx] = "i";
+      render();
+      targets = [];
+      if (rowIdx !== 0) targets.push([colIdx, rowIdx - 1]);
+      if (rowIdx !== 9) targets.push([colIdx, rowIdx + 1]);
+      if (colIdx !== 0) targets.push([colIdx - 1, rowIdx]);
+      if (colIdx !== 9) targets.push([colIdx + 1, rowIdx]);
+      console.log(targets);
+    }
     //checking on which direction injured cells are left, if any
     let direction;
     if (rowIdx !== 9 && boardUser[rowIdx + 1][colIdx] === "i") {
