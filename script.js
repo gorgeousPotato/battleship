@@ -247,7 +247,6 @@ function handleDrop(evt) {
 //function for rotating
 
 function handleRotate(evt) {
-  console.log(evt);
   if (evt.target.nodeName !== "IMG") return;
   evt.target.classList.toggle("rotated");
 }
@@ -683,9 +682,9 @@ function computerRandomShoot() {
       } else if (colIdx === firstColIdx) {
         console.log("hi");
         if (rowIdx > firstRowIdx) {
-          targets.push([colIdx, rowIdx - 1], [colIdx, firstRowIdx + 1]);
+          targets.push([colIdx, rowIdx + 1], [colIdx, firstRowIdx - 1]);
         } else {
-          targets.push([colIdx, firstRowIdx - 1], [colIdx, rowIdx + 1]);
+          targets.push([colIdx, firstRowIdx + 1], [colIdx, rowIdx - 1]);
         }
       }
       render();
