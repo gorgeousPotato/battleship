@@ -1,7 +1,8 @@
 const CONDITION = {
   0: "", //empty
   s: "⚪️", //user's ship
-  sc: "▫️", //computer's ship
+  // sc: "▫️", //computer's ship
+  sc: "", //computer's ship
   i: "💣", //injured
   k: "🔥", //killed
   m: "✖️", //miss
@@ -370,7 +371,7 @@ function handleUserShoot(evt) {
     boardComp[rowIdx][colIdx] = "m";
     turn = false;
     render();
-    setTimeout(computerRandomShoot, 1000);
+    setTimeout(computerShoot, 1000);
     return;
     //if a cell is occupied
   } else if (boardComp[rowIdx][colIdx] === "sc") {
@@ -473,9 +474,9 @@ function handleUserShoot(evt) {
   }
 }
 
-//computer's shooting function (random for now, AI - later)
+//computer's shooting function
 
-//working version below
+//working version below - random
 
 // function computerRandomShoot() {
 //
@@ -595,7 +596,7 @@ function handleUserShoot(evt) {
 //   return winner;
 // }
 
-function computerRandomShoot() {
+function computerShoot() {
   let rowIdx;
   let colIdx;
 
@@ -641,8 +642,6 @@ function computerRandomShoot() {
       // if (colIdx !== 9) targets.push([colIdx + 1, rowIdx]);
     }
   } else if (targets) {
-    console.log(targets);
-
     //while loop to check if a target cell !== undegined and !== injured
     let cellIsEmpty = false;
     while (cellIsEmpty !== true) {
@@ -669,18 +668,14 @@ function computerRandomShoot() {
     } else if (boardUser[rowIdx][colIdx] === "s") {
       boardUser[rowIdx][colIdx] = "i";
       targets = [];
-      console.log(firstRowIdx, rowIdx);
-      console.log(firstColIdx, colIdx);
       //checking either rows or columns are equal, so that we can assign new target cells
       if (rowIdx === firstRowIdx) {
-        console.log("hi");
         if (colIdx > firstColIdx) {
           targets.push([firstColIdx - 1, rowIdx], [colIdx + 1, rowIdx]);
         } else {
           targets.push([colIdx - 1, rowIdx], [firstColIdx + 1, rowIdx]);
         }
       } else if (colIdx === firstColIdx) {
-        console.log("hi");
         if (rowIdx > firstRowIdx) {
           targets.push([colIdx, rowIdx + 1], [colIdx, firstRowIdx - 1]);
         } else {
@@ -688,7 +683,6 @@ function computerRandomShoot() {
         }
       }
       render();
-      console.log(targets);
       // if (rowIdx !== 0) targets.push([colIdx, rowIdx - 1]);
       // if (rowIdx !== 9) targets.push([colIdx, rowIdx + 1]);
       // if (colIdx !== 0) targets.push([colIdx - 1, rowIdx]);
@@ -709,6 +703,7 @@ function computerRandomShoot() {
     direction = "h";
   } else {
     render();
+    setTimeout(computerShoot, 1000);
     return;
   }
   let initialRowIdx = rowIdx;
@@ -778,9 +773,10 @@ function computerRandomShoot() {
       }
     });
   }
-
-  if (isKilled === "true") {
+  if (isKilled) {
     render();
+    setTimeout(computerShoot, 1000);
+
     return;
   } else if (isKilled === false) {
     score.c += 1;
@@ -790,6 +786,7 @@ function computerRandomShoot() {
     targets = null;
     firstColIdx = null;
     firstRowIdx = null;
+    setTimeout(computerShoot, 1000);
     getWinner();
     if (winner) game = false;
     render();
