@@ -38,8 +38,8 @@ header h1 {
 }
 
 header h2 {
-  font-size: 2rem;
-  margin: 0 10rem;
+  font-size: 1.4rem;
+  margin: 0 6rem;
 }
 
 #logo {
@@ -103,6 +103,7 @@ section h2 {
 
 .flex-center {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -119,10 +120,10 @@ section h2 {
 }
 
 footer {
-  margin-top: 4rem;
+  margin-top: 2rem;
 }
 
-.start-game {
+#start-game {
   padding: 1rem 2.4rem;
   border: none;
   border-radius: 100px;
@@ -132,6 +133,22 @@ footer {
   color: #f0eec8;
 }
 
-.start-game:hover {
+#start-game:hover {
+  background-color: #0c084c;
+}
+
+#start-again {
+  padding: 1rem 2.4rem;
+  border: none;
+  border-radius: 100px;
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  background-color: #096386;
+  color: #f0eec8;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#start-again:hover {
   background-color: #0c084c;
 }

@@ -30,7 +30,8 @@ const boardUserEl = document.querySelector(".board-user");
 const boardCompEl = document.querySelector(".board-comp");
 const shipEls = document.querySelectorAll("#ships-to-drag img");
 const shipsEl = document.getElementById("ships-to-drag");
-const startGameBtn = document.querySelector(".start-game");
+const startGameBtn = document.getElementById("start-game");
+const startAgainBtn = document.getElementById("start-again");
 
 /*----- event listeners -----*/
 
@@ -39,10 +40,9 @@ shipsEl.addEventListener("click", handleRotate);
 shipsEl.addEventListener("dragend", handleDragEnd);
 boardUserEl.addEventListener("dragover", handleDragOver);
 boardUserEl.addEventListener("drop", handleDrop);
-
 startGameBtn.addEventListener("click", handleGameStart);
-
 boardCompEl.addEventListener("click", handleUserShoot);
+startAgainBtn.addEventListener("click", initAfterGame);
 
 /*----- functions -----*/
 init();
@@ -461,7 +461,10 @@ function handleUserShoot(evt) {
         boardComp[cell[0]][cell[1]] = "k";
       });
       getWinner();
-      if (winner) game = false;
+      if (winner) {
+        game = false;
+        startAgainBtn.classList.remove("hidden");
+      }
       render();
     }
   }
@@ -691,7 +694,10 @@ function computerShoot() {
     firstRowIdx = null;
     setTimeout(computerShoot, 1000);
     getWinner();
-    if (winner) game = false;
+    if (winner) {
+      game = false;
+      startAgainBtn.classList.remove("hidden");
+    }
     render();
   }
 }
@@ -725,4 +731,21 @@ function huntTarget() {
     if ((colIdx + rowIdx) % 2 === 0) huntTarget = true;
   }
   return huntTargetIdx;
+}
+
+function initAfterGame() {
+  init();
+  shipsEl.innerHTML = `<img draggable="true" class="5" src="images/Frame 1.png" />
+  <img draggable="true" class="4" src="images/Frame 2.png" />
+  <img draggable="true" class="4" src="images/Frame 2.png" />
+  <img draggable="true" class="3" src="images/Frame 3.png" />
+  <img draggable="true" class="3" src="images/Frame 3.png" />
+  <img draggable="true" class="3" src="images/Frame 3.png" />
+  <img draggable="true" class="2" src="images/Frame 4.png" />
+  <img draggable="true" class="2" src="images/Frame 4.png" />
+  <img draggable="true" class="2" src="images/Frame 4.png" />
+  <img draggable="true" class="2" src="images/Frame 4.png" />`;
+  document.getElementById("ships-to-drag-container").classList.remove("hidden");
+  document.getElementById("board-comp-container").classList.add("hidden");
+  scoreEl.classList.add("hidden");
 }
