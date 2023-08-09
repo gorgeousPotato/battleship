@@ -27,13 +27,13 @@ h2 {
 /* header elements */
 
 header img {
-  height: 4rem;
+  height: 2.4rem;
 }
 
 header h1 {
   display: inline-block;
   margin: 0;
-  margin-left: 0.4rem;
+  margin-left: 1rem;
   font-size: 2rem;
 }
 
