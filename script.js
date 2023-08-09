@@ -31,20 +31,16 @@ const boardsEl = document.getElementById("board-user-container"); //maybe delete
 const boardUserEl = document.querySelector(".board-user");
 const boardCompEl = document.querySelector(".board-comp");
 const shipEls = document.querySelectorAll("#ships-to-drag img");
+const shipsEl = document.getElementById("ships-to-drag");
 const startGameBtn = document.querySelector(".start-game");
 
 /*----- event listeners -----*/
-shipEls.forEach((ship) => {
-  addEventListener("dragstart", handleDragStart);
-  addEventListener("dragover", handleDragOver);
-  // addEventListener("dragenter", handleDragEnter);
-  // addEventListener("dragleave", handleDragLeave);
-  addEventListener("dragend", handleDragEnd);
-  addEventListener("drop", handleDrop);
-});
-shipEls.forEach((ship) => {
-  addEventListener("click", handleRotate);
-});
+
+shipsEl.addEventListener("dragstart", handleDragStart);
+shipsEl.addEventListener("click", handleRotate);
+shipsEl.addEventListener("dragend", handleDragEnd);
+boardUserEl.addEventListener("dragover", handleDragOver);
+boardUserEl.addEventListener("drop", handleDrop);
 
 startGameBtn.addEventListener("click", handleGameStart);
 
@@ -208,6 +204,8 @@ function checkShips(board) {
 //functions for dragging and dropping
 
 function handleDragStart(evt) {
+  console.log("start is firing");
+
   dragged = evt.target;
   evt.target.style.opacity = "0.4";
 
@@ -223,6 +221,8 @@ function handleDragStart(evt) {
 }
 
 function handleDragEnd(evt) {
+  console.log("end is firing");
+
   evt.target.style.opacity = ""; //will correct this later
   dragged = null;
 }
@@ -233,7 +233,8 @@ function handleDragOver(evt) {
 }
 
 function handleDrop(evt) {
-  evt.stopPropagation();
+  console.log("drop is firing");
+  // evt.stopPropagation();
   if (evt.target.parentElement.id === "board-user") {
     handleShipPlacement(evt.target.id, shipLength);
     if (shipIsPlaced === true) {
@@ -607,10 +608,11 @@ function computerShoot() {
     //while loop to check if a random cell is empty
     let cellIsEmpty = false;
     while (cellIsEmpty !== true) {
-      cellIdx = randomCellIdx();
+      cellIdx = huntTarget();
       if (
-        boardUser[cellIdx[1]][cellIdx[0]] === 0 ||
-        boardUser[cellIdx[1]][cellIdx[0]] === "s"
+        boardUser[cellIdx[1]][cellIdx[0]] !== "i" &&
+        boardUser[cellIdx[1]][cellIdx[0]] !== "m" &&
+        boardUser[cellIdx[1]][cellIdx[0]] !== "k"
       )
         cellIsEmpty = true;
     }
@@ -646,7 +648,6 @@ function computerShoot() {
     let cellIsEmpty = false;
     while (cellIsEmpty !== true) {
       nextCellIdx = targets.pop();
-      console.log(nextCellIdx);
       if (
         nextCellIdx[1] >= 0 &&
         nextCellIdx[1] <= 9 &&
@@ -804,4 +805,22 @@ function getWinner() {
 function randomTarget(length) {
   const randomNum = Math.floor(Math.random() * length);
   return randomNum;
+}
+
+// helper function for hunt/target strategy random cell choose.
+// it'll randomly choose one of the cells from a pattern for finding a patrol boat (for now)
+
+function huntTarget() {
+  let huntTarget = false;
+  let huntTargetIdx = null;
+  while (huntTarget !== true) {
+    huntTargetIdx = [
+      Math.floor(Math.random() * 10),
+      Math.floor(Math.random() * 10),
+    ];
+    const rowIdx = huntTargetIdx[1];
+    const colIdx = huntTargetIdx[0];
+    if ((colIdx + rowIdx) % 2 === 0) huntTarget = true;
+  }
+  return huntTargetIdx;
 }
