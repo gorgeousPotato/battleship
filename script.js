@@ -122,8 +122,7 @@ function renderMessage() {
   } else if (winner) {
     messageEl.innerHTML = `${winner} won!`;
   } else {
-    messageEl.innerHTML = `Drag a ship to place it, click to rotate ⬇️`;
-    messageEl.style.textAlign = "right";
+    messageEl.innerHTML = `Place your ships!`;
   }
 }
 
