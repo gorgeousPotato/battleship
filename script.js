@@ -25,7 +25,7 @@ let firstColIdx; //to store the first injured cell's col idx
 /*----- cached elements  -----*/
 const messageEl = document.getElementById("turn");
 const scoreEl = document.getElementById("score");
-const boardsEl = document.getElementById("board-user-container"); //maybe delete either this or the next 2 lines, will decide later
+const boardsEl = document.getElementById("board-user-container");
 const boardUserEl = document.querySelector(".board-user");
 const boardCompEl = document.querySelector(".board-comp");
 const shipEls = document.querySelectorAll("#ships-to-drag img");
@@ -83,6 +83,7 @@ function init() {
   winner = null;
   currShip = "cr";
   game = false;
+  targets = null;
   render();
 }
 
@@ -182,7 +183,7 @@ function handleShipPlacement(cellId, length) {
   } else shipIsPlaced = false;
 }
 
-//helper function
+//helper function for getting idx from id
 
 const getIdx = function (id) {
   const idxArr = id.split("");
@@ -226,7 +227,6 @@ function handleDragOver(evt) {
 }
 
 function handleDrop(evt) {
-  // evt.stopPropagation();
   if (evt.target.parentElement.id === "board-user") {
     handleShipPlacement(evt.target.id, shipLength);
     if (shipIsPlaced === true) {
@@ -234,7 +234,6 @@ function handleDrop(evt) {
       dragged.opacity = "";
     }
     if (checkShips(boardUser) === 30) startGameBtn.classList.remove("hidden");
-    // return false;
   }
 }
 
@@ -524,7 +523,6 @@ function computerShoot() {
       );
     }
   } else if (targets) {
-    //while loop to check if a target cell !== undegined and !== injured
     let cellIsEmpty = false;
     while (cellIsEmpty !== true) {
       nextCellIdx = targets.pop();
@@ -746,5 +744,6 @@ function initAfterGame() {
   <img draggable="true" class="2" src="images/Frame 4.png" />`;
   document.getElementById("ships-to-drag-container").classList.remove("hidden");
   document.getElementById("board-comp-container").classList.add("hidden");
+  startAgainBtn.classList.add("hidden");
   scoreEl.classList.add("hidden");
 }

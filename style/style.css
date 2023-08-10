@@ -128,7 +128,7 @@ footer {
   margin-top: 2rem;
 }
 
-#start-game {
+footer button {
   padding: 1rem 2.4rem;
   border: none;
   border-radius: 100px;
@@ -143,13 +143,6 @@ footer {
 }
 
 #start-again {
-  padding: 1rem 2.4rem;
-  border: none;
-  border-radius: 100px;
-  font-family: "Poppins", sans-serif;
-  font-size: 1rem;
-  background-color: #096386;
-  color: #f0eec8;
   margin: 0 auto;
   text-align: center;
 }
