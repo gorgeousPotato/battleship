@@ -50,7 +50,7 @@ The history of Battleship has two debated origins. Some believe it was initially
 
 ## Getting Started
 
-[Battleship game] (https://gorgeouspotato.github.io/battleship/)
+[Battleship game](https://gorgeouspotato.github.io/battleship/)
 
 ## Next Steps
 
