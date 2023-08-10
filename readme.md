@@ -50,6 +50,8 @@ The history of Battleship has two debated origins. Some believe it was initially
 
 ## Getting Started
 
+[Battleship game] (https://gorgeouspotato.github.io/battleship/)
+
 ## Next Steps
 
 - Further improving the AI part of the program. For now, only two strategies are implemented. Each time when the computer uses only the pattern for finding a patrol boat - the shortest one - so that it can be used for finding any type of ships. However, for finding a carrier, the longest ship, the pattern has much less target cells. We could add code that triggers a strategy shift to the target pattern of the next ship once all patrol boats have been sunk.
