@@ -1,5 +1,9 @@
 # Battleship
 
+Battleship is a strategic guessing game designed for two players. In this version, one of the players is represented by the computer. Players strategically position their ships on their respective boards, keeping the ship locations concealed from their opponent. Players take turns making "shots" in an attempt to target and sink each other's ships. The ultimate goal of the game is to destroy all of the opponent's ships.
+
+The history of Battleship has two debated origins. Some believe it was initially invented during World War I, while others suggest similarities to the Basilinda board game published in 1890. In the past, individuals played Battleship using pen and paper, creating grids to represent the playing field and marking the placement of their ships. Over time, the game has evolved, and today we can enjoy Battleship against the computer, a clever opponent powered by advanced artificial intelligence. Do you have what it takes to defeat this formidable digital adversary?
+
 ## Screenshots
 
 ![alt text](https://github.com/gorgeousPotato/battleship/blob/main/images/screenshots/1.beginning.png "the beginning of the game")
@@ -37,3 +41,19 @@
 ![alt text](https://github.com/gorgeousPotato/battleship/blob/main/images/screenshots/targets-1.png "targets")
 
 9. When the next cell of the ship is hit, the computer corrects his list of targets. Once the ship is sunk, the computer reverts back to its initial strategy.
+
+## Technologies Used
+
+- HTML
+- CSS
+- JavaScript
+
+## Getting Started
+
+## Next Steps
+
+- Further improving the AI part of the program. For now, only two strategies are implemented. Each time when the computer uses only the pattern for finding a patrol boat - the shortest one - so that it can be used for finding any type of ships. However, for finding a carrier, the longest ship, the pattern has much less target cells. We could code that triggers a strategy shift to the target pattern of the next ship once all patrol boats have been sunk.
+
+- Implementing the feature for user to be able to rotate and move ships that have already been placed on the board.
+
+- Implementing the "Go Random" button allowing users to choose to have their ships randomly placed
