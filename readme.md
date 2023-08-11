@@ -1,7 +1,7 @@
 # Battleship
 
 Battleship is a strategic guessing game designed for two players. In this version, one of the players is represented by the computer. Players strategically position their ships on their respective boards, keeping the ship locations concealed from their opponent. Players take turns making "shots" in an attempt to target and sink each other's ships. The main goal of the game is to destroy all of the opponent's ships.
-The history of Battleship has two debated origins. Some believe it was initially invented during World War I, while others suggest similarities to the Basilinda board game published in 1890. In the past, individuals played Battleship using pen and paper, creating grids to represent the playing field and marking the placement of their ships. Over time, the game has evolved, and today we can enjoy Battleship against the computer, a clever opponent powered by artificial intelligence. Do you have what it takes to defeat this formidable digital adversary?
+The history of Battleship has two debated origins. Some believe it was initially invented during World War I, while others suggest similarities to the Basilinda board game published in 1890. In the past, individuals played Battleship using pen and paper, creating grids to represent the playing field and marking the placement of their ships. Time goes by, and today we can enjoy Battleship against the computer, a clever opponent powered by artificial intelligence. Do you have what it takes to defeat this formidable digital adversary?
 
 ## Screenshots
 
