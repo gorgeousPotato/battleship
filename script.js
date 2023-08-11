@@ -13,7 +13,6 @@ let game; //is true when the user and the computer make guesses, is wrong when t
 let turn; // true for user, false for computer
 let winner;
 let score;
-let currShip; //represents which ship is being placed
 let shipLength; //represents the length of a ship being placed currently
 let shipIsRotated; //represents if a user's ship is rotated
 let shipIsPlaced;
@@ -81,7 +80,6 @@ function init() {
 
   turn = true;
   winner = null;
-  currShip = "cr";
   game = false;
   targets = null;
   render();
